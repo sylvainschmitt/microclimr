@@ -1,5 +1,8 @@
 # **miroclimr**: Microclimate analyses and modelling
 
+[![R-CMD-check](https://github.com/sylvainschmitt/microclimr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sylvainschmitt/microclimr/actions/workflows/R-CMD-check.yaml)
+
+
 ## Description
 
 *To do.*
