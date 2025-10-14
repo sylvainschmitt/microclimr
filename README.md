@@ -1,7 +1,8 @@
 # **miroclimr**: Microclimate analyses and modelling
 
+[![](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![R-CMD-check](https://github.com/sylvainschmitt/microclimr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sylvainschmitt/microclimr/actions/workflows/R-CMD-check.yaml)
-
+[![lint](https://github.com/sylvainschmitt/microclimr/workflows/lint.yaml/badge.svg)](https://github.com/sylvainschmitt/microclimr/actions?query=workflow%3Alint.yaml)
 
 ## Description
 
