@@ -1,0 +1,31 @@
+Package: microclimr
+Type: Package
+Title: Microclimate analyses and modelling
+Version: 0.1.1
+Authors@R: c(
+    person("Sylvain", "Schmitt", email="sylvain.m.schmitt@gmail.com", role=c("aut", "cre"), comment = c(ORCID = "0000-0001-7759-7106")),
+    person("Erwan", "Hingant", email="erwan.hingant@u-picardie.fr", role="aut", comment = c(ORCID = "0000-0001-7554-0106")),
+    person("Jonathan", "Lenoir", email="jonathan.lenoir@u-picardie.fr", role="aut", comment = c(ORCID = "0000-0003-0638-9582"))
+    )
+Maintainer: Sylvain Schmitt <sylvain.m.schmitt@gmail.com>
+URL: https://github.com/sylvainschmitt/microclimr,
+    https://sylvainschmitt.github.io/microclimr/
+BugReports: https://github.com/sylvainschmitt/microclimr/issues
+Description: Description.
+License: GPL-3
+LazyData: TRUE
+Encoding: UTF-8
+Depends: 
+    R (>= 2.10)
+RoxygenNote: 7.3.1
+Suggests: 
+    knitr,
+    rmarkdown,
+    ggplot2,
+    dplyr,
+    tidyr,
+    lubridate,
+    broom
+VignetteBuilder: knitr
+Imports: 
+    magrittr
