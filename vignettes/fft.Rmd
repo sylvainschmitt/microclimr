@@ -1,0 +1,286 @@
+---
+title: "fft"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{fft}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+datetime <- NA
+```
+
+```{r setup}
+#| message: false
+library(microclimr)
+library(dplyr)
+library(lubridate)
+library(tidyr)
+library(ggplot2)
+```
+
+# Data preparation
+
+## Load Hobo and ERA temperatures
+
+```{r}
+hobo <- hobo %>%
+  select(datetime, t_hobo)
+era <- era %>%
+  rename(t_era = tas, datetime = time) %>%
+  select(datetime, t_era)
+data <- left_join(hobo, era) %>%
+  arrange(datetime)
+```
+
+## Check hours that are lacking
+
+```{r}
+for (i in 1:(nrow(data) - 1))
+  if (data$datetime[i + 1] - data$datetime[i] > as.difftime(1, units = "hours")) #nolint
+    print(i)
+```
+
+Here is a problem at summer time? To discuss!
+
+```{r}
+print(data[2015:2020, ])
+```
+
+After correction:
+
+```{r}
+data$datetime[2019] <- data$datetime[2019] - as.difftime(1, units = "hours")
+print(data[2015:2020, ])
+```
+
+Here is lacking 10 hours:
+
+```{r}
+data[6920:6927, ]
+```
+
+# FFT
+
+The function return the fourier coefficient of t_hobo and t_era within data from date1 to date 2.
+
+```{r}
+rfftfreq <- function(n, d = 1.0) {
+  k <- 0:floor(n / 2)
+  return(k / (n * d))
+}
+mcr_fft <- function(
+    data,
+    date1,
+    date2) {
+  subdata <- data %>%
+    filter(datetime >= date1, datetime <= date2)
+  n <- nrow(subdata) / 2 + 1
+  tibble(
+    fhobo = fft(subdata$t_hobo)[1:n],
+    fera = fft(subdata$t_era)[1:n]
+  )
+}
+```
+
+Test on 5 days
+
+```{r}
+date1 <- as_datetime("2023-07-02 00:00:00")
+date2 <- as_datetime("2023-07-06 23:00:00")
+n <- 5 * 24
+fdata <- data %>%
+  mcr_fft(date1, date2)
+tibble(
+  period = rfftfreq(n),
+  hobo = 2 / n * abs(fdata$fhobo),
+  era = 2 / n * abs(fdata$fera)
+) %>%
+  pivot_longer(
+    cols = hobo:era,
+    names_to = "source",
+    values_to = "power"
+  ) %>%
+  ggplot(aes(period, power, col = source)) +
+  geom_line() +
+  theme_bw() +
+  scale_y_log10() +
+  ggtitle("Representation of power spectrum (window 5days)") +
+  xlab("Period [h ]") +
+  ylab("Power") +
+  scale_x_continuous(
+    breaks = c(0, 1 / 24, 1 / 12, 1 / 8, 1 / 6, 1 / 3),
+    labels = c("0", "24", "12", "8", "6", "3")
+  ) +
+  scale_color_manual("", values = c("#e4c284", "#4a8b76")) +
+  theme(legend.position = c(0.8, 0.8))
+```
+
+This is the core function wich return selected frequencies over a period
+
+```{r}
+mcr_fft2 <- function(
+    data,
+    date_beg,
+    date_end,
+    wd,
+    shift,
+    freq) {
+  n <- wd * 24
+  wd <- as.difftime(n - 1, units = "hours")
+  shift <- as.difftime(shift, units = "days")
+  freq_tab <- tibble(hobo = double(), era = double())
+  date <- date_beg
+  while (date < date_end) {
+    date1 <- date
+    date2 <- date1 + wd
+    subdata <- data %>%
+      filter(datetime >= date1, datetime <= date2)
+    if (nrow(subdata) == n) {
+      fdata <- subdata %>%
+        mcr_fft(date1, date2)
+      freq_tab_date <- tibble(
+        hobo = 2 / n * abs(fdata$fhobo[freq + 1]),
+        era = 2 / n * abs(fdata$fera[freq + 1])
+      )
+      freq_tab <- bind_rows(freq_tab, freq_tab_date)
+    }
+    date <- date + shift
+  }
+  return(freq_tab)
+}
+```
+
+Usage example. The 0 frequency is the mean! But divide by 2.
+
+```{r}
+freq <- 0
+wd <- 5
+shift <- 3
+freq_on <- data %>%
+  mcr_fft2(
+    as_datetime("2023-05-01 00:00:00"),
+    as_datetime("2023-09-30 00:00:00"),
+    wd, shift, freq
+  ) %>%
+  mutate(season = "leaf-on")
+freq_off <- data %>%
+  mcr_fft2(
+    as_datetime("2023-01-01 00:00:00"),
+    as_datetime("2023-05-01 00:00:00"),
+    wd, shift, freq
+  ) %>%
+  mutate(season = "leaf-off")
+bind_rows(freq_on, freq_off) %>%
+  ggplot(aes(era, hobo, col = season)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_bw() +
+  scale_color_manual("Period", values = c("#816768", "#68ae72")) +
+  xlab("ERA5-Land temperature [°C]") +
+  ylab("HOBO temperature [°C]") +
+  coord_equal() +
+  theme(legend.position = "bottom") +
+  ggtitle("Mean temperature")
+```
+
+The 5 frequency is the period 24:
+
+```{r}
+freq <- 5
+wd <- 5
+shift <- 3
+freq_on <- data %>%
+  mcr_fft2(
+    as_datetime("2023-05-01 00:00:00"),
+    as_datetime("2023-09-30 00:00:00"),
+    wd, shift, freq
+  ) %>%
+  mutate(season = "leaf-on")
+freq_off <- data %>%
+  mcr_fft2(
+    as_datetime("2023-01-01 00:00:00"),
+    as_datetime("2023-05-01 00:00:00"),
+    wd, shift, freq
+  ) %>%
+  mutate(season = "leaf-off")
+bind_rows(freq_on, freq_off) %>%
+  ggplot(aes(era, hobo, col = season)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_bw() +
+  scale_color_manual("Period", values = c("#816768", "#68ae72")) +
+  xlab("ERA5-Land temperature [°C]") +
+  ylab("HOBO temperature [°C]") +
+  coord_equal() +
+  theme(legend.position = "bottom") +
+  ggtitle("Frequency 24h")
+```
+
+This is the second function which return variance over a period or energy dissipation
+
+```{r}
+mcr_fft3 <- function(
+    data,
+    date_beg,
+    date_end,
+    wd,
+    shift) {
+  n <- wd * 24 # number of samples
+  wd <- as.difftime(n - 1, units = "hours") # Remove the last hours
+  shift <- as.difftime(shift, units = "days")
+  energy_tab <- tibble(hobo = double(), era = double())
+  date <- date_beg
+  while (date < date_end) {
+    date1 <- date
+    date2 <- date1 + wd
+    subdata <- data %>%
+      filter(datetime >= date1, datetime <= date2)
+    if (nrow(subdata) == n) {
+      fdata <- subdata %>%
+        mcr_fft(date1, date2)
+      energy_tab_date <- tibble(
+        hobo = 2 / n * norm(fdata$fhobo[-1], type = "2"),
+        era = 2 / n * norm(fdata$fera[-1], type = "2")
+      )
+      energy_tab <- bind_rows(energy_tab, energy_tab_date)
+    }
+    date <- date + shift
+  }
+  return(energy_tab)
+}
+```
+
+```{r}
+energy_on <- data %>%
+  mcr_fft3(
+    as_datetime("2023-05-01 00:00:00"),
+    as_datetime("2023-09-30 00:00:00"),
+    wd, shift
+  ) %>%
+  mutate(season = "leaf-on")
+energy_off <- data %>%
+  mcr_fft3(
+    as_datetime("2023-01-01 00:00:00"),
+    as_datetime("2023-05-01 00:00:00"),
+    wd, shift
+  ) %>%
+  mutate(season = "leaf-off")
+bind_rows(energy_on, energy_off) %>%
+  ggplot(aes(era, hobo, col = season)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_bw() +
+  scale_color_manual("Period", values = c("#816768", "#68ae72")) +
+  xlab("ERA5-Land enery") +
+  ylab("HOBO energy") +
+  coord_equal() +
+  theme(legend.position = "bottom") +
+  ggtitle("Energy")
+```
+
