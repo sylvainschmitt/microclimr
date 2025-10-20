@@ -41,9 +41,11 @@ data <- left_join(hobo, era) %>%
 ## Check hours that are lacking
 
 ```{r}
-for (i in 1:(nrow(data) - 1))
-  if (data$datetime[i + 1] - data$datetime[i] > as.difftime(1, units = "hours")) #nolint
+for (i in 1:(nrow(data) - 1)) {
+  if (data$datetime[i + 1] - data$datetime[i] > as.difftime(1, units = "hours")) { # nolint
     print(i)
+  }
+}
 ```
 
 Here is a problem at summer time? To discuss!
@@ -119,6 +121,7 @@ tibble(
   ) +
   scale_color_manual("", values = c("#e4c284", "#4a8b76")) +
   theme(legend.position = c(0.8, 0.8))
+# double bars plusque lignes
 ```
 
 This is the core function wich return selected frequencies over a period
@@ -146,7 +149,7 @@ mcr_fft2 <- function(
         mcr_fft(date1, date2)
       freq_tab_date <- tibble(
         hobo = 2 / n * abs(fdata$fhobo[freq + 1]),
-        era = 2 / n * abs(fdata$fera[freq + 1])
+        era = 2 / n * abs(fdata$fera[freq + 1]) # diviser le 0 par 2
       )
       freq_tab <- bind_rows(freq_tab, freq_tab_date)
     }
@@ -220,6 +223,7 @@ bind_rows(freq_on, freq_off) %>%
   coord_equal() +
   theme(legend.position = "bottom") +
   ggtitle("Frequency 24h")
+# Amplitude associé à fréquence 24h
 ```
 
 This is the second function which return variance over a period or energy dissipation
@@ -277,10 +281,16 @@ bind_rows(energy_on, energy_off) %>%
   geom_smooth(method = "lm") +
   theme_bw() +
   scale_color_manual("Period", values = c("#816768", "#68ae72")) +
-  xlab("ERA5-Land enery") +
+  xlab("ERA5-Land energy") +
   ylab("HOBO energy") +
   coord_equal() +
   theme(legend.position = "bottom") +
   ggtitle("Energy")
-```
 
+# boxplot des rapport d'énergie
+
+# 2 dates, fréquence
+# > modules coefficients normalisés (puissance)
+# > déphasage
+# > fréquences associés
+```
