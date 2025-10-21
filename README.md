@@ -3,6 +3,7 @@
 [![](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![R-CMD-check](https://github.com/sylvainschmitt/microclimr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sylvainschmitt/microclimr/actions/workflows/R-CMD-check.yaml)
 [![lint](https://github.com/sylvainschmitt/microclimr/workflows/lint.yaml/badge.svg)](https://github.com/sylvainschmitt/microclimr/actions?query=workflow%3Alint.yaml)
+[![codecov](https://codecov.io/gh/sylvainschmitt/microclimr/graph/badge.svg?token=S1DLYCOU0N)](https://codecov.io/gh/sylvainschmitt/microclimr)
 
 ## Description
 

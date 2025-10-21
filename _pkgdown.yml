@@ -1,6 +1,7 @@
 url: https://sylvainschmitt.github.io/microclimr/
 template:
   bootstrap: 5
+  math-rendering: mathjax
 navbar:
   structure:
     left: [home, reference, articles, news]

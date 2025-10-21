@@ -1,7 +1,7 @@
 test_that("fft base", {
-  f <- fft_rfft(hobo$t_hobo[1:(24*5)])
-  freq <- fft_freq(24*5, 24*5)
-  temp <- fft_reconstruct(f, freq, 1:24*5)
+  f <- fft_rfft(hobo$t_hobo[1:(24 * 5)])
+  freq <- fft_freq(24 * 5, 24 * 5)
+  temp <- fft_reconstruct(f, freq, 1:(24 * 5))
   expect_equal(temp[1], 18.322375)
   expect_equal(fft_mean(f), 17.6199250)
   expect_equal(fft_period(freq)[1], 120)
