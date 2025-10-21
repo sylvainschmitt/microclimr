@@ -3,6 +3,9 @@ pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   example: example.html
-  ff2: ff2.html
   fft: fft.html
-last_built: 2025-10-20T15:39Z
+  fft2: fft2.html
+last_built: 2025-10-21T13:50Z
+urls:
+  reference: https://sylvainschmitt.github.io/microclimr/reference
+  article: https://sylvainschmitt.github.io/microclimr/articles
