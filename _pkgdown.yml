@@ -1,0 +1,52 @@
+url: https://sylvainschmitt.github.io/microclimr/
+template:
+  bootstrap: 5
+navbar:
+  structure:
+    left: [home, reference, articles, news]
+    right: [github]
+  components:
+    home:
+      icon: fa-home fa-lg
+      href: index.html
+    articles:
+      text: Articles
+      href: articles/index.html
+    reference:
+      text: Reference
+      href: reference/index.html
+    news:
+      text: Change log
+      href: news/index.html
+    github:
+      icon: fab fa-github fa-lg
+      href: https://github.com/sylvainschmitt/microclimr
+
+reference:
+
+- title: Data
+  desc: Micro- and macro-climate data
+  contents:
+  - era
+  - hobo
+- title: Fast Fourier Transform (FFT)
+  desc: Functions for Fast Fourier Transform (FFT) of a series of temperatures
+  contents:
+  - fft_rfft
+  - fft_freq
+  - fft_period
+  - fft_mean
+  - fft_powers
+  - fft_energy
+  - fft_variance
+  - fft_delay
+  - fft_reconstruct
+
+articles:
+
+- title: Tests
+  navbar: Tests
+  contents:
+  - '`example`'
+  - '`fft`'
+  - '`fft2`'

@@ -6,8 +6,8 @@
 \title{ERA5-Land macroclimatic data}
 \format{
 A data frame with X rows and X variables: \describe{
-  \item{time}{description} \item{lat}{description} \item{lon}{description}
-  \item{tas}{description}}
+\item{time}{description} \item{lat}{description} \item{lon}{description}
+\item{tas}{description}}
 }
 \usage{
 era

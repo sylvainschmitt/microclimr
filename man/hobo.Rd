@@ -6,11 +6,11 @@
 \title{HOBO micrloclimatic data}
 \format{
 A data frame with X rows and X variables: \describe{
-  \item{id_sensor}{description} \item{id_plot}{description}
-  \item{position_sensor}{description} \item{datetime}{description}
-  \item{month}{description} \item{month_num}{description}
-  \item{date}{description} \item{time}{description}
-  \item{t_hobo}{description} }
+\item{id_sensor}{description} \item{id_plot}{description}
+\item{position_sensor}{description} \item{datetime}{description}
+\item{month}{description} \item{month_num}{description}
+\item{date}{description} \item{time}{description}
+\item{t_hobo}{description} }
 }
 \usage{
 hobo

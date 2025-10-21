@@ -17,6 +17,7 @@ LazyData: TRUE
 Encoding: UTF-8
 Depends: 
     R (>= 2.10)
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
 Suggests: 
     knitr,
@@ -25,7 +26,9 @@ Suggests:
     dplyr,
     tidyr,
     lubridate,
-    broom
+    broom,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Imports: 
     magrittr
+Config/testthat/edition: 3

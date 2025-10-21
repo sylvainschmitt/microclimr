@@ -155,7 +155,7 @@ mcr_fft2 <- function(
     }
     date <- date + shift
   }
-  return(freq_tab)
+  return(freq_tab) #nolint
 }
 ```
 
@@ -256,7 +256,7 @@ mcr_fft3 <- function(
     }
     date <- date + shift
   }
-  return(energy_tab)
+  return(energy_tab) #nolint
 }
 ```
 
