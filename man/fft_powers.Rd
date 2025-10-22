@@ -22,7 +22,7 @@ its frequency is \eqn{n/T} and period \eqn{T/n}, for \eqn{n=1,\ldots,\ell-1}.
 }
 \examples{
 
-fft_rfft(hobo$t_hobo[1:(24*5)]) \%>\%
+fft_rfft(hobo$t_hobo[1:(24 * 5)]) \%>\%
   fft_powers()
 
 }

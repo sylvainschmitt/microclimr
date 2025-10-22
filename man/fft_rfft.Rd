@@ -43,6 +43,6 @@ have the relation \deqn{a_{n} = \Re (c_{n}) \text{ and }  b_{n} = -
 }
 \examples{
 
-fft_rfft(hobo$t_hobo[1:(24*5)])
+fft_rfft(hobo$t_hobo[1:(24 * 5)])
 
 }

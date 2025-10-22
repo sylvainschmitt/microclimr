@@ -22,23 +22,22 @@ library(dplyr)
 library(lubridate)
 library(tidyr)
 library(ggplot2)
+library(runner)
 ```
 
-# Data preparation
-
-## Load Hobo and ERA temperatures
+# Data load
 
 ```{r}
-hobo <- hobo %>%
-  select(datetime, t_hobo)
-era <- era %>%
-  rename(t_era = tas, datetime = time) %>%
-  select(datetime, t_era)
-data <- left_join(hobo, era) %>%
-  arrange(datetime)
+data <- era %>%
+  rename(era = tas, datetime = time) %>%
+  select(datetime, era) %>%
+  left_join(select(hobo, datetime, t_hobo) %>%
+              rename(hobo = t_hobo))
 ```
 
-## Check hours that are lacking
+## Data check
+
+Check hours that are lacking
 
 ```{r}
 for (i in 1:(nrow(data) - 1)) {
@@ -67,122 +66,89 @@ Here is lacking 10 hours:
 data[6920:6927, ]
 ```
 
-# FFT
-
-The function return the fourier coefficient of t_hobo and t_era within data from date1 to date 2.
-
 ```{r}
-rfftfreq <- function(n, d = 1.0) {
-  k <- 0:floor(n / 2)
-  return(k / (n * d))
-}
-mcr_fft <- function(
-    data,
-    date1,
-    date2) {
-  subdata <- data %>%
-    filter(datetime >= date1, datetime <= date2)
-  n <- nrow(subdata) / 2 + 1
-  tibble(
-    fhobo = fft(subdata$t_hobo)[1:n],
-    fera = fft(subdata$t_era)[1:n]
-  )
-}
+data <- data %>%
+  pivot_longer(
+    cols = era:hobo,
+    names_to = "source",
+    values_to = "temperature"
+  ) %>%
+  mutate(season = ifelse(month(datetime) %in% 5:11, "leaf-on", "leaf-off")) %>%
+  arrange(source, season, datetime)
 ```
 
-Test on 5 days
+# Data
+
+# FFT
+
+Decomposition of Fourier coefficients on 5 days.
 
 ```{r}
+n <- 5 * 24
 date1 <- as_datetime("2023-07-02 00:00:00")
 date2 <- as_datetime("2023-07-06 23:00:00")
-n <- 5 * 24
-fdata <- data %>%
-  mcr_fft(date1, date2)
-tibble(
-  period = rfftfreq(n),
-  hobo = 2 / n * abs(fdata$fhobo),
-  era = 2 / n * abs(fdata$fera)
-) %>%
-  pivot_longer(
-    cols = hobo:era,
-    names_to = "source",
-    values_to = "power"
+data %>%
+  filter(
+    datetime >= date1,
+    datetime <= date2
   ) %>%
-  ggplot(aes(period, power, col = source)) +
-  geom_line() +
+  group_by(source) %>%
+  summarise(power = fft_powers(fft_rfft(temperature))) %>%
+  mutate(period = fft_freq(n, n)) %>%
+  ggplot(aes(period, power, fill = source)) +
+  geom_col(position = "dodge") +
   theme_bw() +
-  scale_y_log10() +
   ggtitle("Representation of power spectrum (window 5days)") +
-  xlab("Period [h ]") +
+  xlab("Period [h]") +
   ylab("Power") +
   scale_x_continuous(
     breaks = c(0, 1 / 24, 1 / 12, 1 / 8, 1 / 6, 1 / 3),
     labels = c("0", "24", "12", "8", "6", "3")
   ) +
-  scale_color_manual("", values = c("#e4c284", "#4a8b76")) +
+  scale_fill_manual("", values = c("#e4c284", "#4a8b76")) +
   theme(legend.position = c(0.8, 0.8))
-# double bars plusque lignes
 ```
 
-This is the core function wich return selected frequencies over a period
+Decomposition of Fourier coefficients using a sliding window with `runner`.
 
 ```{r}
-mcr_fft2 <- function(
-    data,
-    date_beg,
-    date_end,
-    wd,
-    shift,
-    freq) {
-  n <- wd * 24
-  wd <- as.difftime(n - 1, units = "hours")
-  shift <- as.difftime(shift, units = "days")
-  freq_tab <- tibble(hobo = double(), era = double())
-  date <- date_beg
-  while (date < date_end) {
-    date1 <- date
-    date2 <- date1 + wd
-    subdata <- data %>%
-      filter(datetime >= date1, datetime <= date2)
-    if (nrow(subdata) == n) {
-      fdata <- subdata %>%
-        mcr_fft(date1, date2)
-      freq_tab_date <- tibble(
-        hobo = 2 / n * abs(fdata$fhobo[freq + 1]),
-        era = 2 / n * abs(fdata$fera[freq + 1]) # diviser le 0 par 2
-      )
-      freq_tab <- bind_rows(freq_tab, freq_tab_date)
-    }
-    date <- date + shift
-  }
-  return(freq_tab) #nolint
-}
+fc_all <- data %>%
+  group_by(source, season) %>%
+  summarise(
+    data = runner(
+      x = .,
+      k = "5 days",
+      at = seq(min(.$datetime),
+        max(.$datetime),
+        by = "3 days"
+      ),
+      idx = "datetime",
+      f = function(x) {
+        if (nrow(x) == 5 * 24) {
+          tibble(
+            date = mean(x$datetime) %>% as_date(),
+            freq = c(0, fft_freq(n, n)),
+            fc = fft_rfft(x$temperature),
+          )
+        }
+      },
+      na_pad = TRUE
+    )
+  ) %>%
+  filter(!is.na(data)) %>%
+  unnest(data)
 ```
 
-Usage example. The 0 frequency is the mean! But divide by 2.
+Usage example. The 0 frequency is the mean!
 
 ```{r}
-freq <- 0
-wd <- 5
-shift <- 3
-freq_on <- data %>%
-  mcr_fft2(
-    as_datetime("2023-05-01 00:00:00"),
-    as_datetime("2023-09-30 00:00:00"),
-    wd, shift, freq
-  ) %>%
-  mutate(season = "leaf-on")
-freq_off <- data %>%
-  mcr_fft2(
-    as_datetime("2023-01-01 00:00:00"),
-    as_datetime("2023-05-01 00:00:00"),
-    wd, shift, freq
-  ) %>%
-  mutate(season = "leaf-off")
-bind_rows(freq_on, freq_off) %>%
+fc_all %>%
+  group_by(source, season, date) %>%
+  summarise(mean_temperature = fft_mean(fc)) %>%
+  pivot_wider(names_from = source, values_from = mean_temperature) %>%
   ggplot(aes(era, hobo, col = season)) +
   geom_point() +
-  geom_smooth(method = "lm") +
+  geom_smooth() +
   theme_bw() +
   scale_color_manual("Period", values = c("#816768", "#68ae72")) +
   xlab("ERA5-Land temperature [°C]") +
@@ -195,24 +161,10 @@ bind_rows(freq_on, freq_off) %>%
 The 5 frequency is the period 24:
 
 ```{r}
-freq <- 5
-wd <- 5
-shift <- 3
-freq_on <- data %>%
-  mcr_fft2(
-    as_datetime("2023-05-01 00:00:00"),
-    as_datetime("2023-09-30 00:00:00"),
-    wd, shift, freq
-  ) %>%
-  mutate(season = "leaf-on")
-freq_off <- data %>%
-  mcr_fft2(
-    as_datetime("2023-01-01 00:00:00"),
-    as_datetime("2023-05-01 00:00:00"),
-    wd, shift, freq
-  ) %>%
-  mutate(season = "leaf-off")
-bind_rows(freq_on, freq_off) %>%
+fc_all %>%
+  group_by(source, season, date) %>%
+  summarise(power = fft_powers(fc)[5]) %>%
+  pivot_wider(names_from = source, values_from = power) %>%
   ggplot(aes(era, hobo, col = season)) +
   geom_point() +
   geom_smooth(method = "lm") +
@@ -223,59 +175,15 @@ bind_rows(freq_on, freq_off) %>%
   coord_equal() +
   theme(legend.position = "bottom") +
   ggtitle("Frequency 24h")
-# Amplitude associé à fréquence 24h
 ```
 
 This is the second function which return variance over a period or energy dissipation
 
 ```{r}
-mcr_fft3 <- function(
-    data,
-    date_beg,
-    date_end,
-    wd,
-    shift) {
-  n <- wd * 24 # number of samples
-  wd <- as.difftime(n - 1, units = "hours") # Remove the last hours
-  shift <- as.difftime(shift, units = "days")
-  energy_tab <- tibble(hobo = double(), era = double())
-  date <- date_beg
-  while (date < date_end) {
-    date1 <- date
-    date2 <- date1 + wd
-    subdata <- data %>%
-      filter(datetime >= date1, datetime <= date2)
-    if (nrow(subdata) == n) {
-      fdata <- subdata %>%
-        mcr_fft(date1, date2)
-      energy_tab_date <- tibble(
-        hobo = 2 / n * norm(fdata$fhobo[-1], type = "2"),
-        era = 2 / n * norm(fdata$fera[-1], type = "2")
-      )
-      energy_tab <- bind_rows(energy_tab, energy_tab_date)
-    }
-    date <- date + shift
-  }
-  return(energy_tab) #nolint
-}
-```
-
-```{r}
-energy_on <- data %>%
-  mcr_fft3(
-    as_datetime("2023-05-01 00:00:00"),
-    as_datetime("2023-09-30 00:00:00"),
-    wd, shift
-  ) %>%
-  mutate(season = "leaf-on")
-energy_off <- data %>%
-  mcr_fft3(
-    as_datetime("2023-01-01 00:00:00"),
-    as_datetime("2023-05-01 00:00:00"),
-    wd, shift
-  ) %>%
-  mutate(season = "leaf-off")
-bind_rows(energy_on, energy_off) %>%
+fc_all %>%
+  group_by(source, season, date) %>%
+  summarise(energy = fft_energy(fc)) %>%
+  pivot_wider(names_from = source, values_from = energy) %>%
   ggplot(aes(era, hobo, col = season)) +
   geom_point() +
   geom_smooth(method = "lm") +
@@ -286,11 +194,20 @@ bind_rows(energy_on, energy_off) %>%
   coord_equal() +
   theme(legend.position = "bottom") +
   ggtitle("Energy")
+```
 
-# boxplot des rapport d'énergie
-
-# 2 dates, fréquence
-# > modules coefficients normalisés (puissance)
-# > déphasage
-# > fréquences associés
+```{r}
+fc_all %>%
+  group_by(source, season, date) %>%
+  summarise(energy = fft_energy(fc)) %>%
+  pivot_wider(names_from = source, values_from = energy) %>%
+  ggplot(aes(season, hobo / era, fill = season)) +
+  geom_boxplot() +
+  theme_bw() +
+  scale_fill_manual(guide = "none", values = c("#816768", "#68ae72")) +
+  ylab("") +
+  xlab("") +
+  coord_equal() +
+  theme(legend.position = "bottom") +
+  ggtitle("Energy HOBO / ERA5-Land")
 ```

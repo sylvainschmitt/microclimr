@@ -22,7 +22,7 @@ interpreted as a variance by the formula \deqn{\frac 1 2 \sum_{n=1}^{\ell-1}
 }
 \examples{
 
-fft_rfft(hobo$t_hobo[1:(24*5)]) \%>\%
+fft_rfft(hobo$t_hobo[1:(24 * 5)]) \%>\%
   fft_variance()
 
 }

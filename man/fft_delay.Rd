@@ -19,7 +19,7 @@ Fast Fourier Transform (FFT): delay per frequencies
 }
 \examples{
 
-fft_rfft(hobo$t_hobo[1:(24*5)]) \%>\%
-  fft_delay(fft_freq(24*5, 24*5))
+fft_rfft(hobo$t_hobo[1:(24 * 5)]) \%>\%
+  fft_delay(fft_freq(24 * 5, 24 * 5))
 
 }

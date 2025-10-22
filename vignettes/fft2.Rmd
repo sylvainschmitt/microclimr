@@ -20,24 +20,38 @@ library(dplyr)
 library(ggplot2)
 ```
 
-```{r test}
+```{r data}
 t <- 10
 n <- 201
-time <- seq(0, n - 1) * t / n
-temp <- 14 +
-  0.5 * cos(2 * pi * (time - 0.5) * 2 / t) +
-  3 * cos(2 * pi * (time - 0.1) * 4 / t) + 0.3 * rnorm(n)
+data <- tibble(
+  time = (seq_len(n) - 1) * t / n
+) %>%
+  mutate(
+    temperature = 14 +
+      0.5 * cos(2 * pi * (time - 0.5) * 2 / t) +
+      3 * cos(2 * pi * (time - 0.1) * 4 / t) + 0.3 * rnorm(n)
+  )
+(g <- ggplot(data, aes(time, temperature)) +
+   geom_point() +
+   theme_bw())
+```
 
-sp <- fft_rfft(temp)
+```{r decomposition}
+fc <- fft_rfft(data$temperature)
 freq <- fft_freq(n, t)
-
-tt <- seq(0, t, by = 0.01)
-s <- fft_reconstruct(sp, freq, tt)
-
-tibble(time = tt, s) %>%
-  ggplot(aes(time, s)) +
-  geom_line() +
-  geom_point(aes(y = temp), data = tibble(time, temp)) +
+tibble(
+  frequency = freq,
+  power = fft_powers(fc)
+) %>%
+  ggplot(aes(frequency, power)) +
+  geom_col() +
   theme_bw()
 ```
 
+
+```{r prediction}
+preds <- tibble(time = seq(0, t, by = 0.01)) %>%
+  mutate(temperature = fft_reconstruct(f = fc, freq = freq, time = time))
+g +
+  geom_line(data = preds)
+```

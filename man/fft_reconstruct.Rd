@@ -22,8 +22,10 @@ spectrum is 'f' associate to frequencies 'freq'
 }
 \examples{
 
-fft_reconstruct(fft_rfft(hobo$t_hobo[1:(24*5)]),
-                fft_freq(24*5, 24*5),
-                1:24*5)
+fft_reconstruct(
+  fft_rfft(hobo$t_hobo[1:(24 * 5)]),
+  fft_freq(24 * 5, 24 * 5),
+  1:24 * 5
+)
 
 }

@@ -22,7 +22,7 @@ On the other hand, the so-called Parseval formula gives the \emph{energy}:
 }
 \examples{
 
-fft_rfft(hobo$t_hobo[1:(24*5)]) \%>\%
+fft_rfft(hobo$t_hobo[1:(24 * 5)]) \%>\%
   fft_energy()
 
 }

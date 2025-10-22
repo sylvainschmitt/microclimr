@@ -21,7 +21,7 @@ The coefficient \eqn{a_{0}=c_{0}} plays a particular role, it is the mean
 }
 \examples{
 
-fft_rfft(hobo$t_hobo[1:(24*5)]) \%>\%
+fft_rfft(hobo$t_hobo[1:(24 * 5)]) \%>\%
   fft_mean()
 
 }

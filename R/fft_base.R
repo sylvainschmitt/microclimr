@@ -42,14 +42,14 @@ NULL
 #'
 #' @examples
 #'
-#' fft_rfft(hobo$t_hobo[1:(24*5)])
+#' fft_rfft(hobo$t_hobo[1:(24 * 5)])
 #'
 fft_rfft <- function(s) {
   n <- length(s)
   l <- ifelse(n %% 2 == 0, (n %/% 2 + 1), ((n + 1) %/% 2))
   f <- fft(s)[1:l] / n
   f[2:l] <- f[2:l] * 2
-  return(f) #nolint
+  return(f) # nolint
 }
 
 #' FFT frequencies
@@ -116,7 +116,7 @@ fft_period <- function(f) {
 #'
 #' @examples
 #'
-#' fft_rfft(hobo$t_hobo[1:(24*5)]) %>%
+#' fft_rfft(hobo$t_hobo[1:(24 * 5)]) %>%
 #'   fft_mean()
 #'
 fft_mean <- function(f) {
@@ -143,7 +143,7 @@ fft_mean <- function(f) {
 #'
 #' @examples
 #'
-#' fft_rfft(hobo$t_hobo[1:(24*5)]) %>%
+#' fft_rfft(hobo$t_hobo[1:(24 * 5)]) %>%
 #'   fft_powers()
 #'
 fft_powers <- function(f) {
@@ -170,7 +170,7 @@ fft_powers <- function(f) {
 #'
 #' @examples
 #'
-#' fft_rfft(hobo$t_hobo[1:(24*5)]) %>%
+#' fft_rfft(hobo$t_hobo[1:(24 * 5)]) %>%
 #'   fft_energy()
 #'
 fft_energy <- function(f) {
@@ -197,11 +197,11 @@ fft_energy <- function(f) {
 #'
 #' @examples
 #'
-#' fft_rfft(hobo$t_hobo[1:(24*5)]) %>%
+#' fft_rfft(hobo$t_hobo[1:(24 * 5)]) %>%
 #'   fft_variance()
 #'
 fft_variance <- function(f) {
-  sum(abs(f[2:length(f)] - f[1]) ** 2) / 2
+  sum(abs(f[2:length(f)] - f[1])**2) / 2
 }
 
 #' FFT delay
@@ -219,8 +219,8 @@ fft_variance <- function(f) {
 #'
 #' @examples
 #'
-#' fft_rfft(hobo$t_hobo[1:(24*5)]) %>%
-#'   fft_delay(fft_freq(24*5, 24*5))
+#' fft_rfft(hobo$t_hobo[1:(24 * 5)]) %>%
+#'   fft_delay(fft_freq(24 * 5, 24 * 5))
 #'
 fft_delay <- function(f, freq) {
   Arg(f[2:length(f)]) / (2 * pi * freq)
@@ -243,9 +243,11 @@ fft_delay <- function(f, freq) {
 #'
 #' @examples
 #'
-#' fft_reconstruct(fft_rfft(hobo$t_hobo[1:(24*5)]),
-#'                 fft_freq(24*5, 24*5),
-#'                 1:24*5)
+#' fft_reconstruct(
+#'   fft_rfft(hobo$t_hobo[1:(24 * 5)]),
+#'   fft_freq(24 * 5, 24 * 5),
+#'   1:24 * 5
+#' )
 #'
 fft_reconstruct <- function(f, freq, time) {
   s <- Re(f[1])
@@ -253,5 +255,5 @@ fft_reconstruct <- function(f, freq, time) {
     s <- s + Re(f[n + 1]) * cos(2 * pi * freq[n] * time) -
       Im(f[n + 1]) * sin(2 * pi * freq[n] * time)
   }
-  return(s) #nolint
+  return(s) # nolint
 }
