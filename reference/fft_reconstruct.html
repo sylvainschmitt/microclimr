@@ -75,9 +75,11 @@ spectrum is 'f' associate to frequencies 'freq'</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">fft_reconstruct</span><span class="op">(</span><span class="fu"><a href="fft_rfft.html">fft_rfft</a></span><span class="op">(</span><span class="va">hobo</span><span class="op">$</span><span class="va">t_hobo</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="fl">24</span><span class="op">*</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                <span class="fu"><a href="fft_freq.html">fft_freq</a></span><span class="op">(</span><span class="fl">24</span><span class="op">*</span><span class="fl">5</span>, <span class="fl">24</span><span class="op">*</span><span class="fl">5</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                <span class="fl">1</span><span class="op">:</span><span class="fl">24</span><span class="op">*</span><span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">fft_reconstruct</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="fft_rfft.html">fft_rfft</a></span><span class="op">(</span><span class="va">hobo</span><span class="op">$</span><span class="va">t_hobo</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="fl">24</span> <span class="op">*</span> <span class="fl">5</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="fft_freq.html">fft_freq</a></span><span class="op">(</span><span class="fl">24</span> <span class="op">*</span> <span class="fl">5</span>, <span class="fl">24</span> <span class="op">*</span> <span class="fl">5</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fl">1</span><span class="op">:</span><span class="fl">24</span> <span class="op">*</span> <span class="fl">5</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 18.32238 18.33862 16.70438 15.86362 13.93138 16.53063 23.56938 14.52663</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] 16.22837 19.57562 15.84638 15.29163 18.60838 17.10162 23.66537 14.52662</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [17] 19.17837 16.91163 20.13037 19.28962 17.18037 18.62363 19.46438 19.57563</span>
