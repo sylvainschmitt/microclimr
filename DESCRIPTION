@@ -23,13 +23,13 @@ Suggests:
     knitr,
     rmarkdown,
     ggplot2,
-    dplyr,
-    tidyr,
     lubridate,
     broom,
-    runner,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Imports: 
-    magrittr
+    magrittr,
+    dplyr,
+    tidyr,
+    runner
 Config/testthat/edition: 3

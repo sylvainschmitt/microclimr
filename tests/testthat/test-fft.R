@@ -1,4 +1,4 @@
-test_that("fft base", {
+test_that("fft", {
   f <- fft_rfft(hobo$t_hobo[1:(24 * 5)])
   freq <- fft_freq(24 * 5, 24 * 5)
   temp <- fft_reconstruct(f, freq, 1:(24 * 5))
@@ -9,5 +9,6 @@ test_that("fft base", {
   expect_equal(fft_energy(f), 317.647568)
   expect_equal(fft_variance(f), 9286.57923)
   expect_equal(fft_delay(f, freq)[1], 24.14719469)
-  expect_s3_class(fft_tab(hobo$t_hobo[1:(24 * 5)], 24), "data.frame")
+  expect_s3_class(fft_tab(hobo$t_hobo[1:(24 * 5)], 24 * 5), "data.frame")
+  expect_s3_class(fft_roll(hobo, 24 * 5, "datetime", "t_hobo"), "data.frame")
 })

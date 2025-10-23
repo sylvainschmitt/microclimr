@@ -1,4 +1,7 @@
 #' @importFrom stats fft
+#' @importFrom dplyr arrange reframe mutate
+#' @importFrom tidyr unnest
+#' @importFrom runner runner
 NULL
 
 #' Fourier coefficients
@@ -258,7 +261,7 @@ fft_reconstruct <- function(f, freq, time) {
   return(s) # nolint
 }
 
-#' Fourier decomposition table
+#' Fourier table
 #'
 #' Fast Fourier Transform (FFT) of a series of temperatures with resulting
 #' frequencies, periods, coefficients and powers in a single table.
@@ -282,7 +285,7 @@ fft_reconstruct <- function(f, freq, time) {
 #'
 #' @examples
 #'
-#' fft_tab(hobo$t_hobo[1:(24 * 5)], 24*5)
+#' fft_tab(hobo$t_hobo[1:(24 * 5)], 24 * 5)
 #'
 fft_tab <- function(s, t, period = TRUE, power = TRUE) {
   fc <- fft_rfft(s)
@@ -291,7 +294,82 @@ fft_tab <- function(s, t, period = TRUE, power = TRUE) {
     frequency = c(0, freq),
     period = c(0, fft_period(freq)),
     coefficient = fc,
-    power = c(fft_mean(fc),
-              fft_powers(fc))
+    power = c(
+      fft_mean(fc),
+      fft_powers(fc)
+    )
   )
+}
+
+#' Fourier roll
+#'
+#' Fast Fourier Transform (FFT) of a series of temperatures in a table with a
+#' rolling window across a time index with resulting frequencies, periods,
+#' coefficients and powers per window in a single table.
+#'
+#' @param data df. The data frame with a column containing the time index and a
+#'   column containing the temperature.
+#' @param t int. Time window, \eqn{t=N\Delta t} where \eqn{\Delta t} is the
+#'   sampling interval.
+#' @param index_col char. The name of the column containing the time index.
+#' @param temperature_col char. The name of the column containing the
+#'   temperature series.
+#' @param window time. Window size, can be expressed in time units see
+#'   [runner::runner], default is 5 days
+#' @param step time. Window step,  can be expressed in time units see
+#'   [runner::runner], defaults is 3 days.
+#' @param period bool. To include period or not, default TRUE.
+#' @param power bool. To include power or not, default TRUE.
+#'
+#' @details
+#'
+#' Can be used with a grouped table, see vignette *to be linked*.
+#'
+#' @returns
+#'
+#' A table with:
+#' * the datetime of the window
+#' * \eqn{f} the harmonics frequencies \eqn{1/y,\ldots \ell/t}
+#' * \eqn{p} the harmonics periods
+#' * \eqn{f} the Fourier coefficients of \eqn{s} of length \eqn{\ell}, whose
+#' coefficients are \eqn{c_{0},c_{1},\ldots,c_{\ell-1}}
+#' * \eqn{P} array of powers, \eqn{P[n] = |c_{n}|} for \eqn{n=1,\ldots,\ell-1}
+#'
+#' @export
+#'
+#' @examples
+#'
+#' fft_roll(hobo, 24 * 5, "datetime", "t_hobo")
+#'
+fft_roll <- function(
+  data,
+  t,
+  index_col,
+  temperature_col,
+  window = "5 days",
+  step = "3 days",
+  period = TRUE,
+  power = TRUE
+) {
+  . <- .data <- NULL
+  data %>%
+    arrange(.data[[index_col]]) %>%
+    reframe(
+      fft = runner(
+        x = .,
+        k = window,
+        at = seq(min(as.data.frame(.)[, index_col]),
+          max(as.data.frame(.)[, index_col]),
+          by = step
+        ),
+        idx = "datetime",
+        f = function(x) {
+          if (nrow(x) == t) {
+            fft_tab(as.data.frame(x)[, temperature_col], t) %>%
+              mutate(datetime = mean(as.data.frame(x)[, index_col]))
+          }
+        }
+      )
+    ) %>%
+    unnest(fft)
 }

@@ -32,7 +32,7 @@ data <- era %>%
   rename(era = tas, datetime = time) %>%
   select(datetime, era) %>%
   left_join(select(hobo, datetime, t_hobo) %>%
-              rename(hobo = t_hobo))
+    rename(hobo = t_hobo)) #nolint
 ```
 
 ## Data check
@@ -110,31 +110,20 @@ data %>%
   scale_y_sqrt()
 ```
 
-Decomposition of Fourier coefficients using a sliding window with `runner`.
+Decomposition of Fourier coefficients using a sliding window with `fft_roll`.
 
 ```{r}
 fc_all <- data %>%
   group_by(source, season) %>%
-  reframe(
-    data = runner(
-      x = .,
-      k = "5 days",
-      at = seq(min(.$datetime),
-        max(.$datetime),
-        by = "3 days"
-      ),
-      idx = "datetime",
-      f = function(x) {
-        if (nrow(x) == 5 * 24) {
-          fft_tab(x$temperature, n) %>%
-            mutate(date = mean(x$datetime) %>% as_date())
-        }
-      },
-      na_pad = TRUE
-    )
-  ) %>%
-  filter(!is.na(data)) %>%
-  unnest(data)
+  do(fft = fft_roll(
+    data = .,
+    t = n,
+    index_col = "datetime",
+    temperature_col = "temperature",
+    window = "5 days",
+    step = "3 days"
+  )) %>%
+  unnest(fft)
 ```
 
 Usage example. The 0 frequency is the mean!
@@ -142,7 +131,7 @@ Usage example. The 0 frequency is the mean!
 ```{r}
 fc_all %>%
   filter(period == 0) %>%
-  select(season, source, date, power) %>%
+  select(season, source, datetime, power) %>%
   pivot_wider(names_from = source, values_from = power) %>%
   ggplot(aes(era, hobo, col = season)) +
   geom_point() +
@@ -161,7 +150,7 @@ The 5 frequency is the period 24:
 ```{r}
 fc_all %>%
   filter(period == 24) %>%
-  select(season, source, date, power) %>%
+  select(season, source, datetime, power) %>%
   pivot_wider(names_from = source, values_from = power) %>%
   ggplot(aes(era, hobo, col = season)) +
   geom_point() +
@@ -179,7 +168,7 @@ This is the second function which return variance over a period or energy dissip
 
 ```{r}
 fc_all %>%
-  group_by(source, season, date) %>%
+  group_by(source, season, datetime) %>%
   summarise(energy = fft_energy(coefficient)) %>%
   pivot_wider(names_from = source, values_from = energy) %>%
   ggplot(aes(era, hobo, col = season)) +
@@ -196,7 +185,7 @@ fc_all %>%
 
 ```{r}
 fc_all %>%
-  group_by(source, season, date) %>%
+  group_by(source, season, datetime) %>%
   summarise(energy = fft_energy(coefficient)) %>%
   pivot_wider(names_from = source, values_from = energy) %>%
   ggplot(aes(season, hobo / era, fill = season)) +

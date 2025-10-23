@@ -131,35 +131,54 @@ data %>%
 ## Fourier Transform
 
 ```{r}
-subdata <- filter(
-  data,
-  datetime >= as_datetime("2023-05-01 00:00:00"),
-  datetime < as_datetime("2023-05-08 00:00:00")
-)
-subdata %>%
-  ggplot(aes(datetime, t_hobo)) +
-  geom_line(col = "#4a8b76") +
-  theme_bw() +
-  xlab("") +
-  ylab("HOBO temperature [°C]")
+fft_all <- data %>%
+  select(season, datetime, tas, t_hobo) %>%
+  rename(era = tas, hobo = t_hobo) %>%
+  pivot_longer(era:hobo, names_to = "source", values_to = "temperature") %>%
+  group_by(source, season) %>%
+  do(fft = fft_roll(., 24 * 5, "datetime", "temperature")) %>%
+  unnest(fft)
 ```
 
 ```{r}
-fft_metrics <- function(x, sample_rate = 1) {
-  cs <- fft(x)
-  cs <- cs / length(cs)
-  distance_center <- function(c) signif(Mod(c), 4)
-  angle <- function(c) signif(180 * Arg(c) / pi, 3)
-  tibble(
-    cycle = 0:(length(cs) - 1),
-    freq = 0:(length(cs) - 1) * sample_rate / length(cs),
-    strength = sapply(cs, distance_center),
-    delay = sapply(cs, angle)
-  )
-}
-fft_metrics(subdata$t_hobo) %>%
-  ggplot(aes(freq, strength)) +
-  geom_col() +
-  theme_bw()
+fft_all %>%
+  filter(period == 0) %>%
+  select(season, source, datetime, power) %>%
+  pivot_wider(names_from = source, values_from = power) %>%
+  ggplot(aes(era, hobo, col = season)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = " y ~ x") +
+  theme_bw() +
+  scale_color_manual("Period", values = c("#816768", "#68ae72")) +
+  xlab("ERA5-Land temperature [°C]") +
+  ylab("HOBO temperature [°C]") +
+  coord_equal() +
+  theme(legend.position = "bottom") +
+  ggtitle("Mean temperature")
+```
+
+```{r}
+fft_all %>%
+  group_by(source, season, datetime) %>%
+  summarise(energy = fft_energy(coefficient)) %>%
+  pivot_wider(names_from = source, values_from = energy) %>%
+  ggplot(aes(season, hobo / era, fill = season)) +
+  geom_boxplot() +
+  theme_bw() +
+  scale_fill_manual(guide = "none", values = c("#816768", "#68ae72")) +
+  ylab("") +
+  xlab("") +
+  coord_equal() +
+  theme(legend.position = "bottom") +
+  ggtitle("Energy HOBO / ERA5-Land")
+```
+```{r}
+fft_all %>%
+  group_by(source, season, datetime) %>%
+  summarise(energy = fft_energy(coefficient)) %>%
+  pivot_wider(names_from = source, values_from = energy) %>%
+  group_by(season) %>%
+  summarise(dissipation = mean(hobo / era)) %>%
+  knitr::kable()
 ```
 
