@@ -9,4 +9,5 @@ test_that("fft base", {
   expect_equal(fft_energy(f), 317.647568)
   expect_equal(fft_variance(f), 9286.57923)
   expect_equal(fft_delay(f, freq)[1], 24.14719469)
+  expect_s3_class(fft_tab(hobo$t_hobo[1:(24 * 5)], 24), "data.frame")
 })

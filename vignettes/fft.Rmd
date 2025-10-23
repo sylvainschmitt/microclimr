@@ -93,9 +93,9 @@ data %>%
     datetime <= date2
   ) %>%
   group_by(source) %>%
-  summarise(power = fft_powers(fft_rfft(temperature))) %>%
-  mutate(period = fft_freq(n, n)) %>%
-  ggplot(aes(period, power, fill = source)) +
+  summarise(fft = list(fft_tab(temperature, 5 * 24))) %>%
+  unnest(fft) %>%
+  ggplot(aes(frequency, power, fill = source)) +
   geom_col(position = "dodge") +
   theme_bw() +
   ggtitle("Representation of power spectrum (window 5days)") +
@@ -106,7 +106,8 @@ data %>%
     labels = c("0", "24", "12", "8", "6", "3")
   ) +
   scale_fill_manual("", values = c("#e4c284", "#4a8b76")) +
-  theme(legend.position = c(0.8, 0.8))
+  theme(legend.position.inside = c(0.8, 0.8)) +
+  scale_y_sqrt()
 ```
 
 Decomposition of Fourier coefficients using a sliding window with `runner`.
@@ -114,7 +115,7 @@ Decomposition of Fourier coefficients using a sliding window with `runner`.
 ```{r}
 fc_all <- data %>%
   group_by(source, season) %>%
-  summarise(
+  reframe(
     data = runner(
       x = .,
       k = "5 days",
@@ -125,11 +126,8 @@ fc_all <- data %>%
       idx = "datetime",
       f = function(x) {
         if (nrow(x) == 5 * 24) {
-          tibble(
-            date = mean(x$datetime) %>% as_date(),
-            freq = c(0, fft_freq(n, n)),
-            fc = fft_rfft(x$temperature),
-          )
+          fft_tab(x$temperature, n) %>%
+            mutate(date = mean(x$datetime) %>% as_date())
         }
       },
       na_pad = TRUE
@@ -143,12 +141,12 @@ Usage example. The 0 frequency is the mean!
 
 ```{r}
 fc_all %>%
-  group_by(source, season, date) %>%
-  summarise(mean_temperature = fft_mean(fc)) %>%
-  pivot_wider(names_from = source, values_from = mean_temperature) %>%
+  filter(period == 0) %>%
+  select(season, source, date, power) %>%
+  pivot_wider(names_from = source, values_from = power) %>%
   ggplot(aes(era, hobo, col = season)) +
   geom_point() +
-  geom_smooth() +
+  geom_smooth(method = "lm", formula = " y ~ x") +
   theme_bw() +
   scale_color_manual("Period", values = c("#816768", "#68ae72")) +
   xlab("ERA5-Land temperature [°C]") +
@@ -162,12 +160,12 @@ The 5 frequency is the period 24:
 
 ```{r}
 fc_all %>%
-  group_by(source, season, date) %>%
-  summarise(power = fft_powers(fc)[5]) %>%
+  filter(period == 24) %>%
+  select(season, source, date, power) %>%
   pivot_wider(names_from = source, values_from = power) %>%
   ggplot(aes(era, hobo, col = season)) +
   geom_point() +
-  geom_smooth(method = "lm") +
+  geom_smooth(method = "lm", formula = " y ~ x") +
   theme_bw() +
   scale_color_manual("Period", values = c("#816768", "#68ae72")) +
   xlab("ERA5-Land temperature [°C]") +
@@ -182,11 +180,11 @@ This is the second function which return variance over a period or energy dissip
 ```{r}
 fc_all %>%
   group_by(source, season, date) %>%
-  summarise(energy = fft_energy(fc)) %>%
+  summarise(energy = fft_energy(coefficient)) %>%
   pivot_wider(names_from = source, values_from = energy) %>%
   ggplot(aes(era, hobo, col = season)) +
   geom_point() +
-  geom_smooth(method = "lm") +
+  geom_smooth(method = "lm", formula = " y ~ x") +
   theme_bw() +
   scale_color_manual("Period", values = c("#816768", "#68ae72")) +
   xlab("ERA5-Land energy") +
@@ -199,7 +197,7 @@ fc_all %>%
 ```{r}
 fc_all %>%
   group_by(source, season, date) %>%
-  summarise(energy = fft_energy(fc)) %>%
+  summarise(energy = fft_energy(coefficient)) %>%
   pivot_wider(names_from = source, values_from = energy) %>%
   ggplot(aes(season, hobo / era, fill = season)) +
   geom_boxplot() +

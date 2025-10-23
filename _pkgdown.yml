@@ -42,6 +42,7 @@ reference:
   - fft_variance
   - fft_delay
   - fft_reconstruct
+  - fft_tab
 
 articles:
 

@@ -257,3 +257,41 @@ fft_reconstruct <- function(f, freq, time) {
   }
   return(s) # nolint
 }
+
+#' Fourier decomposition table
+#'
+#' Fast Fourier Transform (FFT) of a series of temperatures with resulting
+#' frequencies, periods, coefficients and powers in a single table.
+#'
+#' @param s num. Sampled temperatures at constant interval.
+#' @param t int. Time window, \eqn{t=N\Delta t} where \eqn{\Delta t} is the
+#'   sampling interval.
+#' @param period bool. To include period or not, default TRUE.
+#' @param power bool. To include power or not, default TRUE.
+#'
+#' @returns
+#'
+#' A table with:
+#' * \eqn{f} the harmonics frequencies \eqn{1/y,\ldots \ell/t}
+#' * \eqn{p} the harmonics periods
+#' * \eqn{f} the Fourier coefficients of \eqn{s} of length \eqn{\ell}, whose
+#' coefficients are \eqn{c_{0},c_{1},\ldots,c_{\ell-1}}
+#' * \eqn{P} array of powers, \eqn{P[n] = |c_{n}|} for \eqn{n=1,\ldots,\ell-1}
+#'
+#' @export
+#'
+#' @examples
+#'
+#' fft_tab(hobo$t_hobo[1:(24 * 5)], 24*5)
+#'
+fft_tab <- function(s, t, period = TRUE, power = TRUE) {
+  fc <- fft_rfft(s)
+  freq <- fft_freq(length(s), t)
+  data.frame(
+    frequency = c(0, freq),
+    period = c(0, fft_period(freq)),
+    coefficient = fc,
+    power = c(fft_mean(fc),
+              fft_powers(fc))
+  )
+}
