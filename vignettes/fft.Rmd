@@ -32,7 +32,7 @@ data <- era %>%
   rename(era = tas, datetime = time) %>%
   select(datetime, era) %>%
   left_join(select(hobo, datetime, t_hobo) %>%
-    rename(hobo = t_hobo)) #nolint
+    rename(hobo = t_hobo)) # nolint
 ```
 
 ## Data check

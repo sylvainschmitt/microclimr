@@ -1,5 +1,5 @@
 #' @importFrom stats fft
-#' @importFrom dplyr arrange reframe mutate
+#' @importFrom dplyr arrange reframe mutate full_join rename_with
 #' @importFrom tidyr unnest
 #' @importFrom runner runner
 NULL
@@ -362,14 +362,109 @@ fft_roll <- function(
           max(as.data.frame(.)[, index_col]),
           by = step
         ),
-        idx = "datetime",
+        idx = index_col,
         f = function(x) {
           if (nrow(x) == t) {
-            fft_tab(as.data.frame(x)[, temperature_col], t) %>%
+            fft_tab(as.data.frame(x)[, temperature_col], t,
+              period = period, power = power
+            ) %>%
               mutate(datetime = mean(as.data.frame(x)[, index_col]))
           }
         }
       )
     ) %>%
     unnest(fft)
+}
+
+#' Fourier ratio
+#'
+#' Fast Fourier Transform (FFT) of two series of microclimatic and macroclimatic
+#' temperatures in a table with a rolling window across a time index with
+#' resulting frequencies, periods, micro and macro coefficients and micro and
+#' macro powers, and the ratio of power between the micro and macroclimate per
+#' window in a single table.
+#'
+#' @param data df. The data frame with a column containing the time index and a
+#'   column containing the temperature.
+#' @param t int. Time window, \eqn{t=N\Delta t} where \eqn{\Delta t} is the
+#'   sampling interval.
+#' @param index_col char. The name of the column containing the time index.
+#' @param microclimate_col char. The name of the column containing the
+#'   microclimate temperature series.
+#' @param macroclimate_col char. The name of the column containing the
+#'   macroclimate temperature series.
+#' @param window time. Window size, can be expressed in time units see
+#'   [runner::runner], default is 5 days
+#' @param step time. Window step,  can be expressed in time units see
+#'   [runner::runner], defaults is 3 days.
+#' @param period bool. To include period or not, default TRUE.
+#' @param power bool. To include power or not, default TRUE.
+#'
+#' @details
+#'
+#' Can be used with a grouped table, see vignette *to be linked*.
+#'
+#' @returns
+#'
+#' A table with:
+#' * the datetime of the window
+#' * \eqn{f} the harmonics frequencies \eqn{1/y,\ldots \ell/t}
+#' * \eqn{p} the harmonics periods
+#' * \eqn{f} the Fourier coefficients of \eqn{s} of length \eqn{\ell}, whose
+#' coefficients are \eqn{c_{0},c_{1},\ldots,c_{\ell-1}} for micro and
+#' macroclimate.
+#' * \eqn{P} array of powers, \eqn{P[n] = |c_{n}|} for \eqn{n=1,\ldots,\ell-1}
+#' for micro and macroclimate.
+#' * \eqn{R} array of ratios of micro vs. macro-climate powers
+#'
+#' @export
+#'
+#' @examples
+#'
+#' data <- era %>%
+#'   dplyr::rename(era = tas, datetime = time) %>%
+#'   dplyr::select(datetime, era) %>%
+#'   dplyr::left_join(dplyr::select(hobo, datetime, t_hobo) %>%
+#'                      dplyr::rename(hobo = t_hobo))
+#' fft_ratio(data, 24 * 5, "datetime", "hobo", "era") %>%
+#'   dplyr::filter(period == 24) %>%
+#'   summary()
+#'
+fft_ratio <- function(
+  data,
+  t,
+  index_col,
+  microclimate_col,
+  macroclimate_col,
+  window = "5 days",
+  step = "3 days",
+  period = TRUE,
+  power = TRUE
+) {
+  coefficient <- power_micro <- power_macro <- NULL
+  full_join(
+    fft_roll(
+      data = data,
+      t = t,
+      index_col = index_col,
+      temperature_col = macroclimate_col,
+      window = "5 days",
+      step = "3 days",
+      period = TRUE,
+      power = TRUE
+    ) %>%
+      rename_with(~ paste0(., "_macro"), .cols = coefficient:power),
+    fft_roll(
+      data = data,
+      t = t,
+      index_col = index_col,
+      temperature_col = microclimate_col,
+      window = "5 days",
+      step = "3 days",
+      period = TRUE,
+      power = TRUE
+    ) %>%
+      rename_with(~ paste0(., "_micro"), .cols = coefficient:power)
+  ) %>%
+    mutate(ratio = power_micro / power_macro)
 }

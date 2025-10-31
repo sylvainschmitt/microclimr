@@ -32,7 +32,7 @@ data <- tibble(
       3 * cos(2 * pi * (time - 0.1) * 4 / t) + 0.3 * rnorm(n)
   )
 (g <- ggplot(data, aes(time, temperature)) +
-  geom_point() + #nolint
+  geom_point() + # nolint
   theme_bw())
 ```
 
