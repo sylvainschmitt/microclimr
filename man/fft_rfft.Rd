@@ -10,15 +10,15 @@ fft_rfft(s)
 \item{s}{num. Sampled temperatures at constant interval.}
 }
 \value{
-\eqn{f} the Fourier coefficients of \eqn{s} of length \eqn{\ell}, whose
+\eqn{c} the Fourier coefficients of \eqn{S} of length \eqn{\ell}, whose
 coefficients are \eqn{c_{0},c_{1},\ldots,c_{\ell-1}}
 }
 \description{
 Fast Fourier Transform (FFT) of a series of temperatures.
 }
 \details{
-A series \eqn{S} consisting of \eqn{N} samples measured at a time interval
-\eqn{\Delta t} can be analyzed by a Fourier series
+A series \eqn{S=S_1,\ldots,S_N} consisting of \eqn{N} samples measured at a
+time interval \eqn{\Delta t} can be analyzed by a Fourier series
 
 \deqn{s(t) = a_{0} +  \sum_{n=1}^{\ell} a_{n} \cos(2\pi \tfrac{n}{T} t) +
 b_{n}\sin(2\pi \tfrac n T t)}
@@ -37,7 +37,7 @@ N/2 + 1 & \text{if } N \text{ is even} \\
 }
 
 Generally they take the form of complex number \deqn{c_{n} = a_{n} - i b_{n}
-\,, \quad n=0,\ldots, \ell-1} with the convention \eqn{b_{0}=0}. Hence, we
+\,, \quad n=0,\ldots, \ell-1} with \eqn{b_{0}=0}. Hence, we
 have the relation \deqn{a_{n} = \Re (c_{n}) \text{ and }  b_{n} = -
 \Im(c_{n})\,, \quad n=0,\ldots,\ell \,.}
 }

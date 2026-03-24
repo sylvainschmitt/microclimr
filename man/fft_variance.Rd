@@ -16,7 +16,8 @@ fft_variance(f)
 Fast Fourier Transform (FFT): variance
 }
 \details{
-interpreted as a variance by the formula \deqn{\frac 1 2 \sum_{n=1}^{\ell-1}
+interpreted as a variance by the formula
+\deqn{V = \frac 1 2 \sum_{n=1}^{\ell-1}
 |c_{n}|^{2} = \frac 1 T \int_{0}^{T} |s(t)-c_{0}|^{2}dt \simeq \frac 1 N
 \sum_{n=1}^{N} |S_{n}-c_{0}|^{2}}
 }

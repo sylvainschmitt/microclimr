@@ -24,6 +24,7 @@ Suggests:
     rmarkdown,
     ggplot2,
     lubridate,
+    cowplot,
     broom,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr

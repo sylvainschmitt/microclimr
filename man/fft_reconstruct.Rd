@@ -4,12 +4,12 @@
 \alias{fft_reconstruct}
 \title{FFT reconstruct}
 \usage{
-fft_reconstruct(f, freq, time)
+fft_reconstruct(c, f, time)
 }
 \arguments{
-\item{f}{num. The Fourier coefficients.}
+\item{c}{num. The Fourier coefficients.}
 
-\item{freq}{num. The harmonics frequencies.}
+\item{f}{num. The harmonics frequencies.}
 
 \item{time}{num. Time array.}
 }
@@ -18,7 +18,7 @@ fft_reconstruct(f, freq, time)
 }
 \description{
 Fast Fourier Transform (FFT): Reconstruct the temperatures at time t, whose
-spectrum is 'f' associate to frequencies 'freq'
+spectrum is 'c' associate to frequencies 'f'
 }
 \examples{
 

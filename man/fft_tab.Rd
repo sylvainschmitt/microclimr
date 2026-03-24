@@ -19,9 +19,9 @@ sampling interval.}
 \value{
 A table with:
 \itemize{
-\item \eqn{f} the harmonics frequencies \eqn{1/y,\ldots \ell/t}
+\item \eqn{f} the harmonics frequencies \eqn{1/t,\ldots \ell/t}
 \item \eqn{p} the harmonics periods
-\item \eqn{f} the Fourier coefficients of \eqn{s} of length \eqn{\ell}, whose
+\item \eqn{c} the Fourier coefficients of \eqn{s} of length \eqn{\ell}, whose
 coefficients are \eqn{c_{0},c_{1},\ldots,c_{\ell-1}}
 \item \eqn{P} array of powers, \eqn{P[n] = |c_{n}|} for \eqn{n=1,\ldots,\ell-1}
 }

@@ -207,19 +207,18 @@ after applying the Fourier transform (a graphical function to be added).
 fft_all %>%
   filter(season == "leaf-on") %>%
   group_by(source) %>%
-  ggplot(aes(frequency, power + 1, fill = source)) +
+  filter(period != 0) %>%
+  ggplot(aes(frequency, power, fill = source)) +
   geom_col(position = "dodge") +
   theme_bw() +
   ggtitle("Representation of power spectrum (window 5days)") +
   xlab("Period [h]") +
-  ylab("Power") +
   scale_x_continuous(
     breaks = c(0, 1 / 24, 1 / 12, 1 / 8, 1 / 6, 1 / 3),
     labels = c("0", "24", "12", "8", "6", "3")
   ) +
   scale_fill_manual("", values = c("#e4c284", "#4a8b76")) +
-  theme(legend.position.inside = c(0.8, 0.8)) +
-  scale_y_log10()
+  theme(legend.position.inside = c(0.8, 0.8))
 ```
 
 We can also represent the temperature amplitude relation for a specific
@@ -256,8 +255,8 @@ sub <- filter(
 )
 tibble(time = seq(0, 24 * 5, by = 0.1)) %>%
   mutate(temperature = fft_reconstruct(
-    f = sub$coefficient,
-    freq = sub$frequency[-1],
+    c = sub$coefficient,
+    f = sub$frequency[-1],
     time = time
   )) %>%
   ggplot(aes(

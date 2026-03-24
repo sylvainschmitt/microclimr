@@ -4,10 +4,10 @@
 \alias{fft_powers}
 \title{FFT powers}
 \usage{
-fft_powers(f)
+fft_powers(c)
 }
 \arguments{
-\item{f}{num. The Fourier coefficients.}
+\item{c}{num. The Fourier coefficients.}
 }
 \value{
 \eqn{P} array of powers, \eqn{P[n] = |c_{n}|} for \eqn{n=1,\ldots,\ell-1}.

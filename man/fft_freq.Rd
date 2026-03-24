@@ -9,11 +9,11 @@ fft_freq(n, t)
 \arguments{
 \item{n}{int. Number of samples.}
 
-\item{t}{int. Time window, \eqn{t=N\Delta t} where \eqn{\Delta t} is the
+\item{t}{int. Time window, \eqn{t=n\Delta t} where \eqn{\Delta t} is the
 sampling interval.}
 }
 \value{
-\eqn{f} the harmonics frequencies \eqn{1/y,\ldots \ell/t}.
+\eqn{f} the harmonics frequencies \eqn{1/t,\ldots (\ell-1)/t}
 }
 \description{
 Fast Fourier Transform (FFT):  frequencies for a real signal of length t (in

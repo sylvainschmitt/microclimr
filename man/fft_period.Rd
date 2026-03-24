@@ -10,7 +10,7 @@ fft_period(f)
 \item{f}{num. The harmonics frequencies.}
 }
 \value{
-\eqn{p} the harmonics periods.
+\eqn{p} the harmonics periods, \eqn{p=1/f}.
 }
 \description{
 Fast Fourier Transform (FFT):  periods for a real signal of length t (in

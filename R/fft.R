@@ -12,8 +12,8 @@ NULL
 #'
 #' @details
 #'
-#' A series \eqn{S} consisting of \eqn{N} samples measured at a time interval
-#' \eqn{\Delta t} can be analyzed by a Fourier series
+#' A series \eqn{S=S_1,\ldots,S_N} consisting of \eqn{N} samples measured at a
+#' time interval \eqn{\Delta t} can be analyzed by a Fourier series
 #'
 #' \deqn{s(t) = a_{0} +  \sum_{n=1}^{\ell} a_{n} \cos(2\pi \tfrac{n}{T} t) +
 #' b_{n}\sin(2\pi \tfrac n T t)}
@@ -32,13 +32,13 @@ NULL
 #' }
 #'
 #' Generally they take the form of complex number \deqn{c_{n} = a_{n} - i b_{n}
-#' \,, \quad n=0,\ldots, \ell-1} with the convention \eqn{b_{0}=0}. Hence, we
+#' \,, \quad n=0,\ldots, \ell-1} with \eqn{b_{0}=0}. Hence, we
 #' have the relation \deqn{a_{n} = \Re (c_{n}) \text{ and }  b_{n} = -
 #' \Im(c_{n})\,, \quad n=0,\ldots,\ell \,.}
 #'
 #' @returns
 #'
-#' \eqn{f} the Fourier coefficients of \eqn{s} of length \eqn{\ell}, whose
+#' \eqn{c} the Fourier coefficients of \eqn{S} of length \eqn{\ell}, whose
 #' coefficients are \eqn{c_{0},c_{1},\ldots,c_{\ell-1}}
 #'
 #' @export
@@ -50,9 +50,9 @@ NULL
 fft_rfft <- function(s) {
   n <- length(s)
   l <- ifelse(n %% 2 == 0, (n %/% 2 + 1), ((n + 1) %/% 2))
-  f <- fft(s)[1:l] / n
-  f[2:l] <- f[2:l] * 2
-  return(f) # nolint
+  c <- fft(s)[1:l] / n
+  c[2:l] <- c[2:l] * 2
+  return(c) # nolint
 }
 
 #' FFT frequencies
@@ -61,12 +61,12 @@ fft_rfft <- function(s) {
 #' time) with n samples.
 #'
 #' @param n int. Number of samples.
-#' @param t int. Time window, \eqn{t=N\Delta t} where \eqn{\Delta t} is the
+#' @param t int. Time window, \eqn{t=n\Delta t} where \eqn{\Delta t} is the
 #'   sampling interval.
 #'
 #' @returns
 #'
-#' \eqn{f} the harmonics frequencies \eqn{1/y,\ldots \ell/t}.
+#' \eqn{f} the harmonics frequencies \eqn{1/t,\ldots (\ell-1)/t}
 #'
 #' @export
 #'
@@ -87,7 +87,7 @@ fft_freq <- function(n, t) {
 #'
 #' @returns
 #'
-#' \eqn{p} the harmonics periods.
+#' \eqn{p} the harmonics periods, \eqn{p=1/f}.
 #'
 #' @export
 #'
@@ -104,7 +104,7 @@ fft_period <- function(f) {
 #'
 #' Fast Fourier Transform (FFT): mean temperature
 #'
-#' @param f num. The Fourier coefficients.
+#' @param c num. The Fourier coefficients.
 #'
 #' @details
 #'
@@ -122,15 +122,15 @@ fft_period <- function(f) {
 #' fft_rfft(hobo$t_hobo[1:(24 * 5)]) %>%
 #'   fft_mean()
 #'
-fft_mean <- function(f) {
-  Re(f[1])
+fft_mean <- function(c) {
+  Re(c[1])
 }
 
 #' FFT powers
 #'
 #' Fast Fourier Transform (FFT): powers
 #'
-#' @param f num. The Fourier coefficients.
+#' @param c num. The Fourier coefficients.
 #'
 #' @details
 #'
@@ -149,8 +149,8 @@ fft_mean <- function(f) {
 #' fft_rfft(hobo$t_hobo[1:(24 * 5)]) %>%
 #'   fft_powers()
 #'
-fft_powers <- function(f) {
-  abs(f[2:length(f)])
+fft_powers <- function(c) {
+  abs(c[2:length(c)])
 }
 
 #' FFT energy
@@ -162,7 +162,7 @@ fft_powers <- function(f) {
 #' @details
 #'
 #' On the other hand, the so-called Parseval formula gives the *energy*:
-#' \deqn{|c_{0}|^{2} + \frac 1 2\sum_{n=1}^{\ell-1} |c_{n}|^{2} = \frac 1 T
+#' \deqn{E = |c_{0}|^{2} + \frac 1 2\sum_{n=1}^{\ell-1} |c_{n}|^{2} = \frac 1 T
 #' \int_{0}^{T} |s(t)|^{2}dt \simeq \frac 1 N \sum_{n=1}^{N} |S_{n}|^{2}}
 #'
 #' @returns
@@ -188,7 +188,8 @@ fft_energy <- function(f) {
 #'
 #' @details
 #'
-#' interpreted as a variance by the formula \deqn{\frac 1 2 \sum_{n=1}^{\ell-1}
+#' interpreted as a variance by the formula
+#' \deqn{V = \frac 1 2 \sum_{n=1}^{\ell-1}
 #' |c_{n}|^{2} = \frac 1 T \int_{0}^{T} |s(t)-c_{0}|^{2}dt \simeq \frac 1 N
 #' \sum_{n=1}^{N} |S_{n}-c_{0}|^{2}}
 #'
@@ -232,10 +233,10 @@ fft_delay <- function(f, freq) {
 #' FFT reconstruct
 #'
 #' Fast Fourier Transform (FFT): Reconstruct the temperatures at time t, whose
-#' spectrum is 'f' associate to frequencies 'freq'
+#' spectrum is 'c' associate to frequencies 'f'
 #'
-#' @param f num. The Fourier coefficients.
-#' @param freq num. The harmonics frequencies.
+#' @param c num. The Fourier coefficients.
+#' @param f num. The harmonics frequencies.
 #' @param time num. Time array.
 #'
 #' @returns
@@ -252,11 +253,11 @@ fft_delay <- function(f, freq) {
 #'   1:24 * 5
 #' )
 #'
-fft_reconstruct <- function(f, freq, time) {
-  s <- Re(f[1])
-  for (n in seq_along(freq)) {
-    s <- s + Re(f[n + 1]) * cos(2 * pi * freq[n] * time) -
-      Im(f[n + 1]) * sin(2 * pi * freq[n] * time)
+fft_reconstruct <- function(c, f, time) {
+  s <- Re(c[1])
+  for (n in seq_along(f)) {
+    s <- s + Re(c[n + 1]) * cos(2 * pi * f[n] * time) -
+      Im(c[n + 1]) * sin(2 * pi * f[n] * time)
   }
   return(s) # nolint
 }
@@ -275,9 +276,9 @@ fft_reconstruct <- function(f, freq, time) {
 #' @returns
 #'
 #' A table with:
-#' * \eqn{f} the harmonics frequencies \eqn{1/y,\ldots \ell/t}
+#' * \eqn{f} the harmonics frequencies \eqn{1/t,\ldots \ell/t}
 #' * \eqn{p} the harmonics periods
-#' * \eqn{f} the Fourier coefficients of \eqn{s} of length \eqn{\ell}, whose
+#' * \eqn{c} the Fourier coefficients of \eqn{s} of length \eqn{\ell}, whose
 #' coefficients are \eqn{c_{0},c_{1},\ldots,c_{\ell-1}}
 #' * \eqn{P} array of powers, \eqn{P[n] = |c_{n}|} for \eqn{n=1,\ldots,\ell-1}
 #'

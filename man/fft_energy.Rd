@@ -17,7 +17,7 @@ Fast Fourier Transform (FFT): energy
 }
 \details{
 On the other hand, the so-called Parseval formula gives the \emph{energy}:
-\deqn{|c_{0}|^{2} + \frac 1 2\sum_{n=1}^{\ell-1} |c_{n}|^{2} = \frac 1 T
+\deqn{E = |c_{0}|^{2} + \frac 1 2\sum_{n=1}^{\ell-1} |c_{n}|^{2} = \frac 1 T
 \int_{0}^{T} |s(t)|^{2}dt \simeq \frac 1 N \sum_{n=1}^{N} |S_{n}|^{2}}
 }
 \examples{

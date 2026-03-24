@@ -4,10 +4,10 @@
 \alias{fft_mean}
 \title{FFT mean}
 \usage{
-fft_mean(f)
+fft_mean(c)
 }
 \arguments{
-\item{f}{num. The Fourier coefficients.}
+\item{c}{num. The Fourier coefficients.}
 }
 \value{
 \eqn{f[1]} the first real component of \eqn{f}.
