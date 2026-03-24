@@ -17,12 +17,12 @@ fft_freq(n, t)
 
 - t:
 
-  int. Time window, \\t=N\Delta t\\ where \\\Delta t\\ is the sampling
+  int. Time window, \\t=n\Delta t\\ where \\\Delta t\\ is the sampling
   interval.
 
 ## Value
 
-\\f\\ the harmonics frequencies \\1/y,\ldots \ell/t\\.
+\\f\\ the harmonics frequencies \\1/t,\ldots (\ell-1)/t\\
 
 ## Examples
 

@@ -32,11 +32,11 @@ fft_tab(s, t, period = TRUE, power = TRUE)
 
 A table with:
 
-- \\f\\ the harmonics frequencies \\1/y,\ldots \ell/t\\
+- \\f\\ the harmonics frequencies \\1/t,\ldots \ell/t\\
 
 - \\p\\ the harmonics periods
 
-- \\f\\ the Fourier coefficients of \\s\\ of length \\\ell\\, whose
+- \\c\\ the Fourier coefficients of \\s\\ of length \\\ell\\, whose
   coefficients are \\c\_{0},c\_{1},\ldots,c\_{\ell-1}\\
 
 - \\P\\ array of powers, \\P\[n\] = \|c\_{n}\|\\ for

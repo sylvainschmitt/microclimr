@@ -5,12 +5,12 @@ Fast Fourier Transform (FFT): powers
 ## Usage
 
 ``` r
-fft_powers(f)
+fft_powers(c)
 ```
 
 ## Arguments
 
-- f:
+- c:
 
   num. The Fourier coefficients.
 

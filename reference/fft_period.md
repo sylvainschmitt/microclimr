@@ -17,7 +17,7 @@ fft_period(f)
 
 ## Value
 
-\\p\\ the harmonics periods.
+\\p\\ the harmonics periods, \\p=1/f\\.
 
 ## Examples
 

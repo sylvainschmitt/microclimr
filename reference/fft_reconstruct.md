@@ -1,21 +1,21 @@
 # FFT reconstruct
 
 Fast Fourier Transform (FFT): Reconstruct the temperatures at time t,
-whose spectrum is 'f' associate to frequencies 'freq'
+whose spectrum is 'c' associate to frequencies 'f'
 
 ## Usage
 
 ``` r
-fft_reconstruct(f, freq, time)
+fft_reconstruct(c, f, time)
 ```
 
 ## Arguments
 
-- f:
+- c:
 
   num. The Fourier coefficients.
 
-- freq:
+- f:
 
   num. The harmonics frequencies.
 

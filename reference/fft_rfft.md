@@ -16,13 +16,13 @@ fft_rfft(s)
 
 ## Value
 
-\\f\\ the Fourier coefficients of \\s\\ of length \\\ell\\, whose
+\\c\\ the Fourier coefficients of \\S\\ of length \\\ell\\, whose
 coefficients are \\c\_{0},c\_{1},\ldots,c\_{\ell-1}\\
 
 ## Details
 
-A series \\S\\ consisting of \\N\\ samples measured at a time interval
-\\\Delta t\\ can be analyzed by a Fourier series
+A series \\S=S_1,\ldots,S_N\\ consisting of \\N\\ samples measured at a
+time interval \\\Delta t\\ can be analyzed by a Fourier series
 
 \$\$s(t) = a\_{0} + \sum\_{n=1}^{\ell} a\_{n} \cos(2\pi \tfrac{n}{T}
 t) + b\_{n}\sin(2\pi \tfrac n T t)\$\$
@@ -36,9 +36,9 @@ The number of coeffcients is \$\$ \ell = \begin{cases} N/2 + 1 &
 \end{cases} \$\$
 
 Generally they take the form of complex number \$\$c\_{n} = a\_{n} - i
-b\_{n} \\, \quad n=0,\ldots, \ell-1\$\$ with the convention
-\\b\_{0}=0\\. Hence, we have the relation \$\$a\_{n} = \Re (c\_{n})
-\text{ and } b\_{n} = - \Im(c\_{n})\\, \quad n=0,\ldots,\ell \\.\$\$
+b\_{n} \\, \quad n=0,\ldots, \ell-1\$\$ with \\b\_{0}=0\\. Hence, we
+have the relation \$\$a\_{n} = \Re (c\_{n}) \text{ and } b\_{n} = -
+\Im(c\_{n})\\, \quad n=0,\ldots,\ell \\.\$\$
 
 ## Examples
 

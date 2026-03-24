@@ -1,5 +1,9 @@
 # Changelog
 
+## microclimr 0.0.1.9010
+
+- Erwan maths vignette and maths description in fft.R
+
 ## microclimr 0.0.1.9009
 
 - vignette reorganisation and example writing

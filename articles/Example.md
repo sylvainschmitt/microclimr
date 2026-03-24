@@ -192,8 +192,12 @@ fft_all %>%
   coord_equal() +
   theme(legend.position = "bottom") +
   ggtitle("Energy HOBO / ERA5-Land")
-#> `summarise()` has grouped output by 'source', 'season'. You can override using
-#> the `.groups` argument.
+#> `summarise()` has regrouped the output.
+#> ℹ Summaries were computed grouped by source, season, and datetime.
+#> ℹ Output is grouped by source and season.
+#> ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+#> ℹ Use `summarise(.by = c(source, season, datetime))` for per-operation grouping
+#>   (`?dplyr::dplyr_by`) instead.
 ```
 
 ![](Example_files/figure-html/fft_enery_fig-1.png)
@@ -206,8 +210,12 @@ fft_all %>%
   group_by(season) %>%
   summarise(dissipation = mean(hobo / era)) %>%
   knitr::kable()
-#> `summarise()` has grouped output by 'source', 'season'. You can override using
-#> the `.groups` argument.
+#> `summarise()` has regrouped the output.
+#> ℹ Summaries were computed grouped by source, season, and datetime.
+#> ℹ Output is grouped by source and season.
+#> ℹ Use `summarise(.groups = "drop_last")` to silence this message.
+#> ℹ Use `summarise(.by = c(source, season, datetime))` for per-operation grouping
+#>   (`?dplyr::dplyr_by`) instead.
 ```
 
 | season   | dissipation |
@@ -225,19 +233,18 @@ to be added).
 fft_all %>%
   filter(season == "leaf-on") %>%
   group_by(source) %>%
-  ggplot(aes(frequency, power + 1, fill = source)) +
+  filter(period != 0) %>%
+  ggplot(aes(frequency, power, fill = source)) +
   geom_col(position = "dodge") +
   theme_bw() +
   ggtitle("Representation of power spectrum (window 5days)") +
   xlab("Period [h]") +
-  ylab("Power") +
   scale_x_continuous(
     breaks = c(0, 1 / 24, 1 / 12, 1 / 8, 1 / 6, 1 / 3),
     labels = c("0", "24", "12", "8", "6", "3")
   ) +
   scale_fill_manual("", values = c("#e4c284", "#4a8b76")) +
-  theme(legend.position.inside = c(0.8, 0.8)) +
-  scale_y_log10()
+  theme(legend.position.inside = c(0.8, 0.8))
 ```
 
 ![](Example_files/figure-html/power_spectrum-1.png)
@@ -278,8 +285,8 @@ sub <- filter(
 )
 tibble(time = seq(0, 24 * 5, by = 0.1)) %>%
   mutate(temperature = fft_reconstruct(
-    f = sub$coefficient,
-    freq = sub$frequency[-1],
+    c = sub$coefficient,
+    f = sub$frequency[-1],
     time = time
   )) %>%
   ggplot(aes(

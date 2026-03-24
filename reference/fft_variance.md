@@ -20,7 +20,7 @@ fft_variance(f)
 
 ## Details
 
-interpreted as a variance by the formula \$\$\frac 1 2
+interpreted as a variance by the formula \$\$V = \frac 1 2
 \sum\_{n=1}^{\ell-1} \|c\_{n}\|^{2} = \frac 1 T \int\_{0}^{T}
 \|s(t)-c\_{0}\|^{2}dt \simeq \frac 1 N \sum\_{n=1}^{N}
 \|S\_{n}-c\_{0}\|^{2}\$\$

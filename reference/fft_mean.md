@@ -5,12 +5,12 @@ Fast Fourier Transform (FFT): mean temperature
 ## Usage
 
 ``` r
-fft_mean(f)
+fft_mean(c)
 ```
 
 ## Arguments
 
-- f:
+- c:
 
   num. The Fourier coefficients.
 
