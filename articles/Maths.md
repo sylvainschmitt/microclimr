@@ -1,6 +1,7 @@
 # Maths
 
 ``` r
+
 library(dplyr)
 library(lubridate)
 library(ggplot2)
@@ -9,38 +10,42 @@ library(microclimr)
 ```
 
 ``` r
+
 cols <- c("firebrick", "darkgrey", "darkblue")
-data <- hobo %>%
+data <- hobo |>
   filter(
     month(datetime) == 8,
     day(datetime) %in% 7:12
-  ) %>%
+  ) |>
   arrange(datetime)
-fc <- fft_tab(data$t_hobo, 24 * 6) %>%
+fc <- fft_tab(data$t_hobo, 24 * 6) |>
   mutate(
     amplitude = Re(coefficient),
     phase = Im(coefficient)
-  ) %>%
+  ) |>
   mutate(coeff_sup = ifelse(frequency > 1 / (24 + 1), 0,
     complex(real = amplitude, imaginary = phase)
-  )) %>%
-  mutate(type = ifelse(frequency > 1 / (24 + 1), "other", "Overall trend")) %>%
+  )) |>
+  mutate(type = ifelse(frequency > 1 / (24 + 1), "other", "Overall trend")) |>
   mutate(coeff_day = ifelse(frequency %in% c((1:12) / 24),
     complex(real = amplitude, imaginary = phase), 0
-  )) %>%
+  )) |>
   mutate(type = ifelse(frequency %in% c((1:12) / 24),
-                       "Daily fluctuations", type))
+    "Daily fluctuations", type
+  ))
 data$t_sup <- fft_reconstruct(fc$coeff_sup, fc$frequency[-1], 1:144)
-data$t_day <- fft_reconstruct(fc$coeff_day,
-                              fc$frequency[-1], 1:144) + fc$power[1]
+data$t_day <- fft_reconstruct(
+  fc$coeff_day,
+  fc$frequency[-1], 1:144
+) + fc$power[1]
 g_data <- ggplot(data, aes(datetime, t_hobo)) +
   geom_line() +
   theme_bw() +
   xlab("Time (day)") +
   ylab("Temperature [°C]") +
   ylim(8, 28)
-g_fc <- fc %>%
-  filter(period != 0) %>%
+g_fc <- fc |>
+  filter(period != 0) |>
   ggplot(aes(frequency, power, fill = type)) +
   geom_col() +
   theme_bw() +

@@ -45,6 +45,7 @@ A table with:
 ## Examples
 
 ``` r
+
 fft_tab(hobo$t_hobo[1:(24 * 5)], 24 * 5)
 #>      frequency     period               coefficient       power
 #> 1  0.000000000   0.000000 17.619925000+0.000000000i 17.61992500

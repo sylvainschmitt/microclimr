@@ -82,6 +82,7 @@ Can be used with a grouped table, see vignette *to be linked*.
 ## Examples
 
 ``` r
+
 fft_roll(hobo, 24 * 5, "datetime", "t_hobo")
 #> # A tibble: 5,795 × 5
 #>    frequency period coefficient               power datetime           

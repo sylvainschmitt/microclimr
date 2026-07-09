@@ -26,7 +26,8 @@ mean \$\$a\_{0} = \frac 1 N \sum\_{n=1}^{N}S\_{n}\\.\$\$
 ## Examples
 
 ``` r
-fft_rfft(hobo$t_hobo[1:(24 * 5)]) %>%
+
+fft_rfft(hobo$t_hobo[1:(24 * 5)]) |>
   fft_mean()
 #> [1] 17.61993
 ```

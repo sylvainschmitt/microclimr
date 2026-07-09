@@ -28,7 +28,8 @@ On the other hand, the so-called Parseval formula gives the *energy*:
 ## Examples
 
 ``` r
-fft_rfft(hobo$t_hobo[1:(24 * 5)]) %>%
+
+fft_rfft(hobo$t_hobo[1:(24 * 5)]) |>
   fft_energy()
 #> [1] 317.6476
 ```

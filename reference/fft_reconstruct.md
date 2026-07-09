@@ -30,6 +30,7 @@ fft_reconstruct(c, f, time)
 ## Examples
 
 ``` r
+
 fft_reconstruct(
   fft_rfft(hobo$t_hobo[1:(24 * 5)]),
   fft_freq(24 * 5, 24 * 5),

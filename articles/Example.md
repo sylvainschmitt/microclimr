@@ -6,6 +6,7 @@ dates wrangling, and `ggplot2` for graphic creations (a few will be
 replaced by the package functions itself).
 
 ``` r
+
 library(microclimr)
 library(ggplot2)
 library(dplyr)
@@ -23,10 +24,11 @@ been extracted from the Google Earth Engine (GEE) for longitude 3.70 and
 latitude 50.2 corresponding to the Mormal forest.
 
 ``` r
-data <- hobo %>%
-  left_join(rename(era, datetime = time), by = join_by(datetime)) %>%
+
+data <- hobo |>
+  left_join(rename(era, datetime = time), by = join_by(datetime)) |>
   mutate(season = ifelse(month_num %in% 5:11, "leaf-on", "leaf-off"))
-data %>%
+data |>
   ggplot(aes(x = datetime)) +
   geom_line(aes(y = tas, col = "ERA5-Land"), alpha = .5) +
   geom_line(aes(y = t_hobo, col = "HOBO"), alpha = .5) +
@@ -52,7 +54,8 @@ observe a negligible mean offset during the leaf-off season, but a drop
 of approximately 1.1°C during the leaf-on season.
 
 ``` r
-data %>%
+
+data |>
   ggplot(aes(season, t_hobo - tas, col = season)) +
   geom_boxplot() +
   theme_bw() +
@@ -68,9 +71,10 @@ data %>%
 ![](Example_files/figure-html/offset_fig-1.png)
 
 ``` r
-data %>%
-  group_by(season) %>%
-  summarise(offset = mean(t_hobo - tas)) %>%
+
+data |>
+  group_by(season) |>
+  summarise(offset = mean(t_hobo - tas)) |>
   knitr::kable()
 ```
 
@@ -91,7 +95,8 @@ high temperature and increases low temperature in the understorey, with
 a value of 0.7 and an equilibrium point at 12.6°C.
 
 ``` r
-data %>%
+
+data |>
   ggplot(aes(tas, t_hobo, col = season)) +
   geom_point(alpha = .01) +
   geom_abline(linetype = "dashed") +
@@ -108,19 +113,20 @@ data %>%
 ![](Example_files/figure-html/se_fig-1.png)
 
 ``` r
-data %>%
-  group_by(season) %>%
-  do(fit = lm(t_hobo ~ tas, data = .)) %>%
-  mutate(fit = list(tidy(fit))) %>%
-  unnest() %>%
+
+data |>
+  group_by(season) |>
+  do(fit = lm(t_hobo ~ tas, data = .)) |>
+  mutate(fit = list(tidy(fit))) |>
+  unnest() |>
   mutate(term = recode(term,
     "(Intercept)" = "intercept",
     "tas" = "slope"
-  )) %>%
-  select(season, term, estimate) %>%
-  pivot_wider(names_from = "term", values_from = "estimate") %>%
-  mutate(equilibrium = intercept / (1 - slope)) %>%
-  select(season, slope, equilibrium) %>%
+  )) |>
+  select(season, term, estimate) |>
+  pivot_wider(names_from = "term", values_from = "estimate") |>
+  mutate(equilibrium = intercept / (1 - slope)) |>
+  select(season, slope, equilibrium) |>
   knitr::kable()
 #> Warning: `cols` is now required when using `unnest()`.
 #> ℹ Please use `cols = c(fit)`.
@@ -142,12 +148,13 @@ source of data (ERA macroclimate or HOBO microclimate), by using the
 `fft_roll` function. This requires further explanation.
 
 ``` r
-fft_all <- data %>%
-  select(season, datetime, tas, t_hobo) %>%
-  rename(era = tas, hobo = t_hobo) %>%
-  pivot_longer(era:hobo, names_to = "source", values_to = "temperature") %>%
-  group_by(source, season) %>%
-  do(fft = fft_roll(., 24 * 5, "datetime", "temperature")) %>%
+
+fft_all <- data |>
+  select(season, datetime, tas, t_hobo) |>
+  rename(era = tas, hobo = t_hobo) |>
+  pivot_longer(era:hobo, names_to = "source", values_to = "temperature") |>
+  group_by(source, season) |>
+  do(fft = fft_roll(., 24 * 5, "datetime", "temperature")) |>
   unnest(fft)
 ```
 
@@ -155,10 +162,11 @@ Then, using the mean represented here by the 0 period, we can identify
 the linear relationship between mean temperatures.
 
 ``` r
-fft_all %>%
-  filter(period == 0) %>%
-  select(season, source, datetime, power) %>%
-  pivot_wider(names_from = source, values_from = power) %>%
+
+fft_all |>
+  filter(period == 0) |>
+  select(season, source, datetime, power) |>
+  pivot_wider(names_from = source, values_from = power) |>
   ggplot(aes(era, hobo, col = season)) +
   geom_point() +
   geom_smooth(method = "lm", formula = " y ~ x") +
@@ -179,10 +187,11 @@ This highlights the microclimate effect during the leaf-on season, with
 87% of the energy remaining in the microclimate.
 
 ``` r
-fft_all %>%
-  group_by(source, season, datetime) %>%
-  summarise(energy = fft_energy(coefficient)) %>%
-  pivot_wider(names_from = source, values_from = energy) %>%
+
+fft_all |>
+  group_by(source, season, datetime) |>
+  summarise(energy = fft_energy(coefficient)) |>
+  pivot_wider(names_from = source, values_from = energy) |>
   ggplot(aes(season, hobo / era, fill = season)) +
   geom_boxplot() +
   theme_bw() +
@@ -203,12 +212,13 @@ fft_all %>%
 ![](Example_files/figure-html/fft_enery_fig-1.png)
 
 ``` r
-fft_all %>%
-  group_by(source, season, datetime) %>%
-  summarise(energy = fft_energy(coefficient)) %>%
-  pivot_wider(names_from = source, values_from = energy) %>%
-  group_by(season) %>%
-  summarise(dissipation = mean(hobo / era)) %>%
+
+fft_all |>
+  group_by(source, season, datetime) |>
+  summarise(energy = fft_energy(coefficient)) |>
+  pivot_wider(names_from = source, values_from = energy) |>
+  group_by(season) |>
+  summarise(dissipation = mean(hobo / era)) |>
   knitr::kable()
 #> `summarise()` has regrouped the output.
 #> ℹ Summaries were computed grouped by source, season, and datetime.
@@ -230,10 +240,11 @@ microlimates after applying the Fourier transform (a graphical function
 to be added).
 
 ``` r
-fft_all %>%
-  filter(season == "leaf-on") %>%
-  group_by(source) %>%
-  filter(period != 0) %>%
+
+fft_all |>
+  filter(season == "leaf-on") |>
+  group_by(source) |>
+  filter(period != 0) |>
   ggplot(aes(frequency, power, fill = source)) +
   geom_col(position = "dodge") +
   theme_bw() +
@@ -254,10 +265,11 @@ frequency, such as the 24-hour period shown here (graphical function to
 be added?).
 
 ``` r
-fft_all %>%
-  filter(period == 24) %>%
-  select(season, source, datetime, power) %>%
-  pivot_wider(names_from = source, values_from = power) %>%
+
+fft_all |>
+  filter(period == 24) |>
+  select(season, source, datetime, power) |>
+  pivot_wider(names_from = source, values_from = power) |>
   ggplot(aes(era, hobo, col = season)) +
   geom_point() +
   geom_smooth(method = "lm", formula = " y ~ x") +
@@ -279,16 +291,17 @@ finer time step. For example, this can be achieved using the
 `fft_reconstruct` function (to be used for macroclimate debiasing).
 
 ``` r
+
 sub <- filter(
   fft_all, source == "hobo",
   datetime == as_datetime("2023-01-04 12:30:00")
 )
-tibble(time = seq(0, 24 * 5, by = 0.1)) %>%
+tibble(time = seq(0, 24 * 5, by = 0.1)) |>
   mutate(temperature = fft_reconstruct(
     c = sub$coefficient,
     f = sub$frequency[-1],
     time = time
-  )) %>%
+  )) |>
   ggplot(aes(
     as_datetime(as_date("2023-01-04") - 2 + time / 24),
     temperature

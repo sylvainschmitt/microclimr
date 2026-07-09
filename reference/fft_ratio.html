@@ -5,7 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Fourier ratio — fft_ratio"><meta name="description" content="Fast Fourier Transform (FFT) of two series of microclimatic and macroclimatic
+</script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Fourier ratio — fft_ratio"><meta name="description" content="Fast Fourier Transform (FFT) of two series of microclimatic and macroclimatic
 temperatures in a table with a rolling window across a time index with
 resulting frequencies, periods, micro and macro coefficients and micro and
 macro powers, and the ratio of power between the micro and macroclimate per
@@ -136,32 +136,32 @@ for micro and macroclimate.</p></li>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">era</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>era <span class="op">=</span> <span class="va">tas</span>, datetime <span class="op">=</span> <span class="va">time</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">datetime</span>, <span class="va">era</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">hobo</span>, <span class="va">datetime</span>, <span class="va">t_hobo</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">era</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>era <span class="op">=</span> <span class="va">tas</span>, datetime <span class="op">=</span> <span class="va">time</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">datetime</span>, <span class="va">era</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">hobo</span>, <span class="va">datetime</span>, <span class="va">t_hobo</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>hobo <span class="op">=</span> <span class="va">t_hobo</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Joining with `by = join_by(datetime)`</span>
-<span class="r-in"><span><span class="fu">fft_ratio</span><span class="op">(</span><span class="va">data</span>, <span class="fl">24</span> <span class="op">*</span> <span class="fl">5</span>, <span class="st">"datetime"</span>, <span class="st">"hobo"</span>, <span class="st">"era"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">period</span> <span class="op">==</span> <span class="fl">24</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu">fft_ratio</span><span class="op">(</span><span class="va">data</span>, <span class="fl">24</span> <span class="op">*</span> <span class="fl">5</span>, <span class="st">"datetime"</span>, <span class="st">"hobo"</span>, <span class="st">"era"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">period</span> <span class="op">==</span> <span class="fl">24</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Joining with `by = join_by(frequency, period, datetime)`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    frequency           period   coefficient_macro  power_macro    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.04167   Min.   :24   Length:119        Min.   :0.4197  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:0.04167   1st Qu.:24   Class :complex    1st Qu.:1.5442  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :0.04167   Median :24   Mode  :complex    Median :2.8018  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :0.04167   Mean   :24                     Mean   :2.7343  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:0.04167   3rd Qu.:24                     3rd Qu.:3.7916  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :0.04167   Max.   :24                     Max.   :5.4461  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     datetime                   coefficient_micro  power_micro    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :2023-01-04 12:30:00   Length:119        Min.   :0.5165  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:2023-04-06 00:30:00   Class :complex    1st Qu.:1.5917  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :2023-07-03 12:30:00   Mode  :complex    Median :2.4286  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :2023-07-02 20:09:49                     Mean   :2.4598  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:2023-09-30 00:30:00                     3rd Qu.:3.3235  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :2023-12-27 12:30:00                     Max.   :4.9065  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                  NA's   :25      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    frequency           period    coefficient_macro    power_macro    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.04167   Min.   :24   Min.Mod   : 0.4197   Min.   :0.4197  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:0.04167   1st Qu.:24   Median.Mod: 2.8018   1st Qu.:1.5442  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :0.04167   Median :24   Max.Mod   : 5.4461   Median :2.8018  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :0.04167   Mean   :24   Min.Arg   :-3.1173   Mean   :2.7343  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:0.04167   3rd Qu.:24   Median.Arg: 2.7174   3rd Qu.:3.7916  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :0.04167   Max.   :24   Max.Arg   : 3.0893   Max.   :5.4461  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     datetime                    coefficient_micro    power_micro    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :2023-01-04 12:30:00   Min.Mod   : 0.5165   Min.   :0.5165  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:2023-04-06 00:30:00   Median.Mod: 2.4286   1st Qu.:1.5917  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Median :2023-07-03 12:30:00   Max.Mod   : 4.9065   Median :2.4286  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :2023-07-02 20:09:49   Min.Arg   :-3.1240   Mean   :2.4598  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:2023-09-30 00:30:00   Median.Arg: 2.6925   3rd Qu.:3.3235  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :2023-12-27 12:30:00   Max.Arg   : 3.0747   Max.   :4.9065  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                NAs       :25        NAs    :25      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      ratio       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Min.   :0.4093  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  1st Qu.:0.6407  </span>
@@ -169,7 +169,7 @@ for micro and macroclimate.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Mean   :0.7823  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  3rd Qu.:0.9519  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Max.   :1.2607  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  NA's   :25      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  NAs    :25      </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -182,7 +182,7 @@ for micro and macroclimate.</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

@@ -28,7 +28,8 @@ interpreted as a variance by the formula \$\$V = \frac 1 2
 ## Examples
 
 ``` r
-fft_rfft(hobo$t_hobo[1:(24 * 5)]) %>%
+
+fft_rfft(hobo$t_hobo[1:(24 * 5)]) |>
   fft_variance()
 #> [1] 9286.579
 ```

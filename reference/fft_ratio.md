@@ -94,32 +94,33 @@ Can be used with a grouped table, see vignette *to be linked*.
 ## Examples
 
 ``` r
-data <- era %>%
-  dplyr::rename(era = tas, datetime = time) %>%
-  dplyr::select(datetime, era) %>%
-  dplyr::left_join(dplyr::select(hobo, datetime, t_hobo) %>%
+
+data <- era |>
+  dplyr::rename(era = tas, datetime = time) |>
+  dplyr::select(datetime, era) |>
+  dplyr::left_join(dplyr::select(hobo, datetime, t_hobo) |>
     dplyr::rename(hobo = t_hobo))
 #> Joining with `by = join_by(datetime)`
-fft_ratio(data, 24 * 5, "datetime", "hobo", "era") %>%
-  dplyr::filter(period == 24) %>%
+fft_ratio(data, 24 * 5, "datetime", "hobo", "era") |>
+  dplyr::filter(period == 24) |>
   summary()
 #> Joining with `by = join_by(frequency, period, datetime)`
-#>    frequency           period   coefficient_macro  power_macro    
-#>  Min.   :0.04167   Min.   :24   Length:119        Min.   :0.4197  
-#>  1st Qu.:0.04167   1st Qu.:24   Class :complex    1st Qu.:1.5442  
-#>  Median :0.04167   Median :24   Mode  :complex    Median :2.8018  
-#>  Mean   :0.04167   Mean   :24                     Mean   :2.7343  
-#>  3rd Qu.:0.04167   3rd Qu.:24                     3rd Qu.:3.7916  
-#>  Max.   :0.04167   Max.   :24                     Max.   :5.4461  
-#>                                                                   
-#>     datetime                   coefficient_micro  power_micro    
-#>  Min.   :2023-01-04 12:30:00   Length:119        Min.   :0.5165  
-#>  1st Qu.:2023-04-06 00:30:00   Class :complex    1st Qu.:1.5917  
-#>  Median :2023-07-03 12:30:00   Mode  :complex    Median :2.4286  
-#>  Mean   :2023-07-02 20:09:49                     Mean   :2.4598  
-#>  3rd Qu.:2023-09-30 00:30:00                     3rd Qu.:3.3235  
-#>  Max.   :2023-12-27 12:30:00                     Max.   :4.9065  
-#>                                                  NA's   :25      
+#>    frequency           period    coefficient_macro    power_macro    
+#>  Min.   :0.04167   Min.   :24   Min.Mod   : 0.4197   Min.   :0.4197  
+#>  1st Qu.:0.04167   1st Qu.:24   Median.Mod: 2.8018   1st Qu.:1.5442  
+#>  Median :0.04167   Median :24   Max.Mod   : 5.4461   Median :2.8018  
+#>  Mean   :0.04167   Mean   :24   Min.Arg   :-3.1173   Mean   :2.7343  
+#>  3rd Qu.:0.04167   3rd Qu.:24   Median.Arg: 2.7174   3rd Qu.:3.7916  
+#>  Max.   :0.04167   Max.   :24   Max.Arg   : 3.0893   Max.   :5.4461  
+#>                                                                      
+#>     datetime                    coefficient_micro    power_micro    
+#>  Min.   :2023-01-04 12:30:00   Min.Mod   : 0.5165   Min.   :0.5165  
+#>  1st Qu.:2023-04-06 00:30:00   Median.Mod: 2.4286   1st Qu.:1.5917  
+#>  Median :2023-07-03 12:30:00   Max.Mod   : 4.9065   Median :2.4286  
+#>  Mean   :2023-07-02 20:09:49   Min.Arg   :-3.1240   Mean   :2.4598  
+#>  3rd Qu.:2023-09-30 00:30:00   Median.Arg: 2.6925   3rd Qu.:3.3235  
+#>  Max.   :2023-12-27 12:30:00   Max.Arg   : 3.0747   Max.   :4.9065  
+#>                                NAs       :25        NAs    :25      
 #>      ratio       
 #>  Min.   :0.4093  
 #>  1st Qu.:0.6407  
@@ -127,5 +128,5 @@ fft_ratio(data, 24 * 5, "datetime", "hobo", "era") %>%
 #>  Mean   :0.7823  
 #>  3rd Qu.:0.9519  
 #>  Max.   :1.2607  
-#>  NA's   :25      
+#>  NAs    :25      
 ```
