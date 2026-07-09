@@ -1,6 +1,7 @@
 #' @importFrom stats fft
-#' @importFrom dplyr arrange reframe mutate full_join rename_with
+#' @importFrom dplyr arrange reframe mutate full_join rename_with pick
 #' @importFrom tidyr unnest
+#' @importFrom tidyselect everything
 #' @importFrom runner runner
 NULL
 
@@ -93,7 +94,7 @@ fft_freq <- function(n, t) {
 #'
 #' @examples
 #'
-#' fft_freq(201, 10) %>%
+#' fft_freq(201, 10) |>
 #'   fft_period()
 #'
 fft_period <- function(f) {
@@ -119,7 +120,7 @@ fft_period <- function(f) {
 #'
 #' @examples
 #'
-#' fft_rfft(hobo$t_hobo[1:(24 * 5)]) %>%
+#' fft_rfft(hobo$t_hobo[1:(24 * 5)]) |>
 #'   fft_mean()
 #'
 fft_mean <- function(c) {
@@ -146,7 +147,7 @@ fft_mean <- function(c) {
 #'
 #' @examples
 #'
-#' fft_rfft(hobo$t_hobo[1:(24 * 5)]) %>%
+#' fft_rfft(hobo$t_hobo[1:(24 * 5)]) |>
 #'   fft_powers()
 #'
 fft_powers <- function(c) {
@@ -173,7 +174,7 @@ fft_powers <- function(c) {
 #'
 #' @examples
 #'
-#' fft_rfft(hobo$t_hobo[1:(24 * 5)]) %>%
+#' fft_rfft(hobo$t_hobo[1:(24 * 5)]) |>
 #'   fft_energy()
 #'
 fft_energy <- function(f) {
@@ -201,7 +202,7 @@ fft_energy <- function(f) {
 #'
 #' @examples
 #'
-#' fft_rfft(hobo$t_hobo[1:(24 * 5)]) %>%
+#' fft_rfft(hobo$t_hobo[1:(24 * 5)]) |>
 #'   fft_variance()
 #'
 fft_variance <- function(f) {
@@ -223,7 +224,7 @@ fft_variance <- function(f) {
 #'
 #' @examples
 #'
-#' fft_rfft(hobo$t_hobo[1:(24 * 5)]) %>%
+#' fft_rfft(hobo$t_hobo[1:(24 * 5)]) |>
 #'   fft_delay(fft_freq(24 * 5, 24 * 5))
 #'
 fft_delay <- function(f, freq) {
@@ -352,15 +353,15 @@ fft_roll <- function(
   period = TRUE,
   power = TRUE
 ) {
-  . <- .data <- NULL
-  data %>%
-    arrange(.data[[index_col]]) %>%
+  .data <- NULL
+  data |>
+    arrange(.data[[index_col]]) |>
     reframe(
       fft = runner(
-        x = .,
+        x = pick(everything()),
         k = window,
-        at = seq(min(as.data.frame(.)[, index_col]),
-          max(as.data.frame(.)[, index_col]),
+        at = seq(min(as.data.frame(pick(everything()))[, index_col]),
+          max(as.data.frame(pick(everything()))[, index_col]),
           by = step
         ),
         idx = index_col,
@@ -368,12 +369,12 @@ fft_roll <- function(
           if (nrow(x) == t) {
             fft_tab(as.data.frame(x)[, temperature_col], t,
               period = period, power = power
-            ) %>%
+            ) |>
               mutate(datetime = mean(as.data.frame(x)[, index_col]))
           }
         }
       )
-    ) %>%
+    ) |>
     unnest(fft)
 }
 
@@ -422,13 +423,13 @@ fft_roll <- function(
 #'
 #' @examples
 #'
-#' data <- era %>%
-#'   dplyr::rename(era = tas, datetime = time) %>%
-#'   dplyr::select(datetime, era) %>%
-#'   dplyr::left_join(dplyr::select(hobo, datetime, t_hobo) %>%
+#' data <- era |>
+#'   dplyr::rename(era = tas, datetime = time) |>
+#'   dplyr::select(datetime, era) |>
+#'   dplyr::left_join(dplyr::select(hobo, datetime, t_hobo) |>
 #'     dplyr::rename(hobo = t_hobo))
-#' fft_ratio(data, 24 * 5, "datetime", "hobo", "era") %>%
-#'   dplyr::filter(period == 24) %>%
+#' fft_ratio(data, 24 * 5, "datetime", "hobo", "era") |>
+#'   dplyr::filter(period == 24) |>
 #'   summary()
 #'
 fft_ratio <- function(
@@ -453,7 +454,7 @@ fft_ratio <- function(
       step = "3 days",
       period = TRUE,
       power = TRUE
-    ) %>%
+    ) |>
       rename_with(~ paste0(., "_macro"), .cols = coefficient:power),
     fft_roll(
       data = data,
@@ -464,8 +465,8 @@ fft_ratio <- function(
       step = "3 days",
       period = TRUE,
       power = TRUE
-    ) %>%
+    ) |>
       rename_with(~ paste0(., "_micro"), .cols = coefficient:power)
-  ) %>%
+  ) |>
     mutate(ratio = power_micro / power_macro)
 }

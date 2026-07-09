@@ -12,10 +12,10 @@ test_that("fft", {
   expect_s3_class(fft_tab(hobo$t_hobo[1:(24 * 5)], 24 * 5), "data.frame")
   expect_s3_class(fft_roll(hobo, 24 * 5, "datetime", "t_hobo"), "data.frame")
   expect_s3_class(fft_roll(hobo, 24 * 5, "datetime", "t_hobo"), "data.frame")
-  data <- era %>%
-    dplyr::rename(era = tas, datetime = time) %>%
-    dplyr::select(datetime, era) %>%
-    dplyr::left_join(dplyr::select(hobo, datetime, t_hobo) %>%
+  data <- era |>
+    dplyr::rename(era = tas, datetime = time) |>
+    dplyr::select(datetime, era) |>
+    dplyr::left_join(dplyr::select(hobo, datetime, t_hobo) |>
                        dplyr::rename(hobo = t_hobo))
   expect_s3_class(
     fft_ratio(data, 24 * 5, "datetime", "hobo", "era"),

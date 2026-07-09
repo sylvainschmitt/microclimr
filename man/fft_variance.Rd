@@ -23,7 +23,7 @@ interpreted as a variance by the formula
 }
 \examples{
 
-fft_rfft(hobo$t_hobo[1:(24 * 5)]) \%>\%
+fft_rfft(hobo$t_hobo[1:(24 * 5)]) |>
   fft_variance()
 
 }

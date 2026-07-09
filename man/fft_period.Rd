@@ -18,7 +18,7 @@ time) with n samples.
 }
 \examples{
 
-fft_freq(201, 10) \%>\%
+fft_freq(201, 10) |>
   fft_period()
 
 }
