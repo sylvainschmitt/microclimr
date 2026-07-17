@@ -40,10 +40,13 @@ reference:
   desc: Base functions for Fast Fourier Transform (FFT) of a series of temperatures
   contents:
   - fft_rfft
+  - fft_amplitude
+  - fft_phase
+  - fft_coefficient
   - fft_freq
   - fft_period
   - fft_mean
-  - fft_powers
+  - fft_power
   - fft_energy
   - fft_variance
   - fft_delay
@@ -54,14 +57,14 @@ articles:
 - title: Principle
   navbar: Principle
   contents:
-  - '`Maths`'
+  - '`maths`'
 
 - title: Examples
   navbar: Examples
   contents:
-  - '`Example`'
+  - '`example`'
 
 - title: Others
   navbar: Others
   contents:
-  - '`Macroclimate`'
+  - '`macroclimate`'

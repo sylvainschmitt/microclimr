@@ -32,5 +32,7 @@ Imports:
     dplyr,
     tidyr,
     tidyselect,
+    tibble,
+    rlang,
     runner
 Config/testthat/edition: 3

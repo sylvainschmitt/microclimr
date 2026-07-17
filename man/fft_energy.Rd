@@ -4,10 +4,10 @@
 \alias{fft_energy}
 \title{FFT energy}
 \usage{
-fft_energy(f)
+fft_energy(coefficients)
 }
 \arguments{
-\item{f}{num. The Fourier coefficients.}
+\item{coefficients}{num. The Fourier coefficients.}
 }
 \value{
 \eqn{E} the energy.
@@ -22,7 +22,7 @@ On the other hand, the so-called Parseval formula gives the \emph{energy}:
 }
 \examples{
 
-fft_rfft(hobo$t_hobo[1:(24 * 5)]) |>
+fft_rfft(temperatures = hobo$t_hobo[1:(24 * 5)]) |>
   fft_energy()
 
 }

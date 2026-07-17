@@ -4,10 +4,10 @@
 \alias{fft_mean}
 \title{FFT mean}
 \usage{
-fft_mean(c)
+fft_mean(coefficients)
 }
 \arguments{
-\item{c}{num. The Fourier coefficients.}
+\item{coefficients}{num. The Fourier amplitudes.}
 }
 \value{
 \eqn{f[1]} the first real component of \eqn{f}.
@@ -16,12 +16,12 @@ fft_mean(c)
 Fast Fourier Transform (FFT): mean temperature
 }
 \details{
-The coefficient \eqn{a_{0}=c_{0}} plays a particular role, it is the mean
+The amplitude \eqn{a_{0}} plays a particular role, it is the mean
 \deqn{a_{0} = \frac 1 N \sum_{n=1}^{N}S_{n}\,.}
 }
 \examples{
 
-fft_rfft(hobo$t_hobo[1:(24 * 5)]) |>
+fft_rfft(temperatures = hobo$t_hobo[1:(24 * 5)]) |>
   fft_mean()
 
 }

@@ -6,8 +6,8 @@
 \usage{
 fft_roll(
   data,
-  t,
-  index_col,
+  time_window,
+  time_col,
   temperature_col,
   window = "5 days",
   step = "3 days",
@@ -19,10 +19,10 @@ fft_roll(
 \item{data}{df. The data frame with a column containing the time index and a
 column containing the temperature.}
 
-\item{t}{int. Time window, \eqn{t=N\Delta t} where \eqn{\Delta t} is the
-sampling interval.}
+\item{time_window}{int. Time window, \eqn{T=n\Delta t} where \eqn{\Delta t}
+is the sampling interval.}
 
-\item{index_col}{char. The name of the column containing the time index.}
+\item{time_col}{char. The name of the column containing the time index.}
 
 \item{temperature_col}{char. The name of the column containing the
 temperature series.}
@@ -43,8 +43,10 @@ A table with:
 \item the datetime of the window
 \item \eqn{f} the harmonics frequencies \eqn{1/y,\ldots \ell/t}
 \item \eqn{p} the harmonics periods
-\item \eqn{f} the Fourier coefficients of \eqn{s} of length \eqn{\ell}, whose
-coefficients are \eqn{c_{0},c_{1},\ldots,c_{\ell-1}}
+\item \eqn{a_{n}} the amplitudes of the Fourier coefficients of \eqn{s}
+of length \eqn{\ell}, whose values are \eqn{a_{0},a_{1},\ldots,c_{\ell-1}}
+\item \eqn{b_{n}} the phases of the Fourier coefficients of \eqn{s}
+of length \eqn{\ell}, whose values are \eqn{a_{0},a_{1},\ldots,c_{\ell-1}}
 \item \eqn{P} array of powers, \eqn{P[n] = |c_{n}|} for \eqn{n=1,\ldots,\ell-1}
 }
 }
@@ -58,6 +60,9 @@ Can be used with a grouped table, see vignette \emph{to be linked}.
 }
 \examples{
 
-fft_roll(hobo, 24 * 5, "datetime", "t_hobo")
+fft_roll(
+  data = hobo, time_window = 24 * 5,
+  time_col = "datetime", temperature_col = "t_hobo"
+)
 
 }

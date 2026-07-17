@@ -1,8 +1,8 @@
 ---
-title: "Maths"
+title: "maths"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Maths}
+  %\VignetteIndexEntry{maths}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -31,10 +31,6 @@ data <- hobo |>
   ) |>
   arrange(datetime)
 fc <- fft_tab(data$t_hobo, 24 * 6) |>
-  mutate(
-    amplitude = Re(coefficient),
-    phase = Im(coefficient)
-  ) |>
   mutate(coeff_sup = ifelse(frequency > 1 / (24 + 1), 0,
     complex(real = amplitude, imaginary = phase)
   )) |>

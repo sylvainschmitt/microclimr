@@ -4,13 +4,13 @@
 \alias{fft_tab}
 \title{Fourier table}
 \usage{
-fft_tab(s, t, period = TRUE, power = TRUE)
+fft_tab(temperatures, time_window, period = TRUE, power = TRUE)
 }
 \arguments{
-\item{s}{num. Sampled temperatures at constant interval.}
+\item{temperatures}{num. Series of temperatures at constant interval.}
 
-\item{t}{int. Time window, \eqn{t=N\Delta t} where \eqn{\Delta t} is the
-sampling interval.}
+\item{time_window}{int. Time window, \eqn{T=n\Delta t} where \eqn{\Delta t}
+is the sampling interval.}
 
 \item{period}{bool. To include period or not, default TRUE.}
 
@@ -21,17 +21,19 @@ A table with:
 \itemize{
 \item \eqn{f} the harmonics frequencies \eqn{1/t,\ldots \ell/t}
 \item \eqn{p} the harmonics periods
-\item \eqn{c} the Fourier coefficients of \eqn{s} of length \eqn{\ell}, whose
-coefficients are \eqn{c_{0},c_{1},\ldots,c_{\ell-1}}
+\item \eqn{a_{n}} the amplitudes of the Fourier coefficients of \eqn{s}
+of length \eqn{\ell}, whose values are \eqn{a_{0},a_{1},\ldots,c_{\ell-1}}
+\item \eqn{b_{n}} the phases of the Fourier coefficients of \eqn{s}
+of length \eqn{\ell}, whose values are \eqn{a_{0},a_{1},\ldots,c_{\ell-1}}
 \item \eqn{P} array of powers, \eqn{P[n] = |c_{n}|} for \eqn{n=1,\ldots,\ell-1}
 }
 }
 \description{
 Fast Fourier Transform (FFT) of a series of temperatures with resulting
-frequencies, periods, coefficients and powers in a single table.
+frequencies, periods, amplitudes, phase, and powers in a single table.
 }
 \examples{
 
-fft_tab(hobo$t_hobo[1:(24 * 5)], 24 * 5)
+fft_tab(temperatures = hobo$t_hobo[1:(24 * 5)], time_window = 24 * 5)
 
 }

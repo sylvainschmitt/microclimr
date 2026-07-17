@@ -1,8 +1,8 @@
 ---
-title: "Macroclimate"
+title: "macroclimate"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Macroclimate}
+  %\VignetteIndexEntry{macroclimate}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

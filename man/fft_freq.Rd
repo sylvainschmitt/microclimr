@@ -2,25 +2,25 @@
 % Please edit documentation in R/fft.R
 \name{fft_freq}
 \alias{fft_freq}
-\title{FFT frequencies}
+\title{FFT frequency}
 \usage{
-fft_freq(n, t)
+fft_freq(samples, time_window)
 }
 \arguments{
-\item{n}{int. Number of samples.}
+\item{samples}{int. Number of samples.}
 
-\item{t}{int. Time window, \eqn{t=n\Delta t} where \eqn{\Delta t} is the
-sampling interval.}
+\item{time_window}{int. Time window, \eqn{T=n\Delta t} where \eqn{\Delta t}
+is the sampling interval.}
 }
 \value{
 \eqn{f} the harmonics frequencies \eqn{1/t,\ldots (\ell-1)/t}
 }
 \description{
-Fast Fourier Transform (FFT):  frequencies for a real signal of length t (in
+Fast Fourier Transform (FFT):  frequencies for a real signal of length T (in
 time) with n samples.
 }
 \examples{
 
-fft_freq(201, 10)
+fft_freq(samples = 201, time_window = 10)
 
 }

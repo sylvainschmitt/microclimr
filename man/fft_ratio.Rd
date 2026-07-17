@@ -6,8 +6,8 @@
 \usage{
 fft_ratio(
   data,
-  t,
-  index_col,
+  time_window,
+  time_col,
   microclimate_col,
   macroclimate_col,
   window = "5 days",
@@ -20,10 +20,10 @@ fft_ratio(
 \item{data}{df. The data frame with a column containing the time index and a
 column containing the temperature.}
 
-\item{t}{int. Time window, \eqn{t=N\Delta t} where \eqn{\Delta t} is the
-sampling interval.}
+\item{time_window}{int. Time window, \eqn{T=N\Delta t} where \eqn{\Delta t}
+is the sampling interval.}
 
-\item{index_col}{char. The name of the column containing the time index.}
+\item{time_col}{char. The name of the column containing the time index.}
 
 \item{microclimate_col}{char. The name of the column containing the
 microclimate temperature series.}
@@ -47,9 +47,10 @@ A table with:
 \item the datetime of the window
 \item \eqn{f} the harmonics frequencies \eqn{1/y,\ldots \ell/t}
 \item \eqn{p} the harmonics periods
-\item \eqn{f} the Fourier coefficients of \eqn{s} of length \eqn{\ell}, whose
-coefficients are \eqn{c_{0},c_{1},\ldots,c_{\ell-1}} for micro and
-macroclimate.
+\item \eqn{a_{n}} the amplitudes of the Fourier coefficients of \eqn{s}
+of length \eqn{\ell}, whose values are \eqn{a_{0},a_{1},\ldots,c_{\ell-1}}
+\item \eqn{b_{n}} the phases of the Fourier coefficients of \eqn{s}
+of length \eqn{\ell}, whose values are \eqn{a_{0},a_{1},\ldots,c_{\ell-1}}
 \item \eqn{P} array of powers, \eqn{P[n] = |c_{n}|} for \eqn{n=1,\ldots,\ell-1}
 for micro and macroclimate.
 \item \eqn{R} array of ratios of micro vs. macro-climate powers
@@ -63,17 +64,23 @@ macro powers, and the ratio of power between the micro and macroclimate per
 window in a single table.
 }
 \details{
-Can be used with a grouped table, see vignette \emph{to be linked}.
+Can be used with a grouped table, see \href{Examples.html}{vignette}.
 }
 \examples{
 
 data <- era |>
   dplyr::rename(era = tas, datetime = time) |>
   dplyr::select(datetime, era) |>
-  dplyr::left_join(dplyr::select(hobo, datetime, t_hobo) |>
-    dplyr::rename(hobo = t_hobo))
-fft_ratio(data, 24 * 5, "datetime", "hobo", "era") |>
+  dplyr::left_join(
+    dplyr::select(hobo, datetime, t_hobo) |>
+      dplyr::rename(hobo = t_hobo),
+    by = dplyr::join_by(datetime)
+  )
+fft_ratio(
+  data = data, time_window = 24 * 5, time_col = "datetime",
+  microclimate_col = "hobo", macroclimate_col = "era"
+) |>
   dplyr::filter(period == 24) |>
-  summary()
+  dplyr::summarise_all(mean, na.rm = TRUE)
 
 }

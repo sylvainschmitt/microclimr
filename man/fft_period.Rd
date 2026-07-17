@@ -4,21 +4,21 @@
 \alias{fft_period}
 \title{FFT periods}
 \usage{
-fft_period(f)
+fft_period(frequencies)
 }
 \arguments{
-\item{f}{num. The harmonics frequencies.}
+\item{frequencies}{num. The harmonics frequencies.}
 }
 \value{
 \eqn{p} the harmonics periods, \eqn{p=1/f}.
 }
 \description{
-Fast Fourier Transform (FFT):  periods for a real signal of length t (in
+Fast Fourier Transform (FFT):  periods for a real signal of length T (in
 time) with n samples.
 }
 \examples{
 
-fft_freq(201, 10) |>
+fft_freq(samples = 201, time_window = 10) |>
   fft_period()
 
 }
