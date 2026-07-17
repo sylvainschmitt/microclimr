@@ -4,12 +4,12 @@
 \alias{fft_delay}
 \title{FFT delay}
 \usage{
-fft_delay(f, freq)
+fft_delay(coefficients, frequencies)
 }
 \arguments{
-\item{f}{num. The Fourier coefficients.}
+\item{coefficients}{num. The Fourier coefficients.}
 
-\item{freq}{num. The harmonics frequencies.}
+\item{frequencies}{num. The harmonics frequencies.}
 }
 \value{
 \eqn{D} array of delays, \eqn{D[n] =\theta_{n}} for \eqn{n=1,\ldots,\ell-1}.
@@ -19,7 +19,7 @@ Fast Fourier Transform (FFT): delay per frequencies
 }
 \examples{
 
-fft_rfft(hobo$t_hobo[1:(24 * 5)]) |>
-  fft_delay(fft_freq(24 * 5, 24 * 5))
+fft_rfft(temperatures = hobo$t_hobo[1:(24 * 5)]) |>
+  fft_delay(fft_freq(samples = 24 * 5, time_window = 24 * 5))
 
 }

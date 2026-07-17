@@ -4,10 +4,10 @@
 \alias{fft_variance}
 \title{FFT variance}
 \usage{
-fft_variance(f)
+fft_variance(coefficients)
 }
 \arguments{
-\item{f}{num. The Fourier coefficients.}
+\item{coefficients}{num. The Fourier coefficients.}
 }
 \value{
 \eqn{V} the variance.
@@ -23,7 +23,7 @@ interpreted as a variance by the formula
 }
 \examples{
 
-fft_rfft(hobo$t_hobo[1:(24 * 5)]) |>
+fft_rfft(temperatures = hobo$t_hobo[1:(24 * 5)]) |>
   fft_variance()
 
 }

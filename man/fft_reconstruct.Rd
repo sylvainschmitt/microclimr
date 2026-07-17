@@ -4,28 +4,29 @@
 \alias{fft_reconstruct}
 \title{FFT reconstruct}
 \usage{
-fft_reconstruct(c, f, time)
+fft_reconstruct(coefficients, frequencies, times)
 }
 \arguments{
-\item{c}{num. The Fourier coefficients.}
+\item{coefficients}{num. The Fourier coefficients.}
 
-\item{f}{num. The harmonics frequencies.}
+\item{frequencies}{num. The harmonics frequencies.}
 
-\item{time}{num. Time array.}
+\item{times}{num. Time array.}
 }
 \value{
-\eqn{s} an array that contains the value of \eqn{s(t)}.
+\eqn{s} an array that contains the value of the series of temperature
+\eqn{s(t)}.
 }
 \description{
 Fast Fourier Transform (FFT): Reconstruct the temperatures at time t, whose
-spectrum is 'c' associate to frequencies 'f'
+coefficients are 'c' associate to frequencies 'f'
 }
 \examples{
 
 fft_reconstruct(
-  fft_rfft(hobo$t_hobo[1:(24 * 5)]),
-  fft_freq(24 * 5, 24 * 5),
-  1:24 * 5
+  coefficients = fft_rfft(temperatures = hobo$t_hobo[1:(24 * 5)]),
+  frequencies = fft_freq(samples = 24 * 5, time_window = 24 * 5),
+  times = 1:24 * 5
 )
 
 }

@@ -4,10 +4,10 @@
 \alias{fft_rfft}
 \title{Fourier coefficients}
 \usage{
-fft_rfft(s)
+fft_rfft(temperatures)
 }
 \arguments{
-\item{s}{num. Sampled temperatures at constant interval.}
+\item{temperatures}{num. Series of temperatures at constant interval.}
 }
 \value{
 \eqn{c} the Fourier coefficients of \eqn{S} of length \eqn{\ell}, whose
@@ -43,6 +43,6 @@ have the relation \deqn{a_{n} = \Re (c_{n}) \text{ and }  b_{n} = -
 }
 \examples{
 
-fft_rfft(hobo$t_hobo[1:(24 * 5)])
+fft_rfft(temperatures = hobo$t_hobo[1:(24 * 5)])
 
 }

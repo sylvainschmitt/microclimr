@@ -1,8 +1,8 @@
 ---
-title: "Example"
+title: "example"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Example}
+  %\VignetteIndexEntry{example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -175,7 +175,7 @@ remaining in the microclimate.
 ```{r fft_enery_fig}
 fft_all |>
   group_by(source, season, datetime) |>
-  summarise(energy = fft_energy(coefficient)) |>
+  summarise(energy = fft_energy(fft_coefficient(amplitude, phase))) |>
   pivot_wider(names_from = source, values_from = energy) |>
   ggplot(aes(season, hobo / era, fill = season)) +
   geom_boxplot() +
@@ -191,7 +191,7 @@ fft_all |>
 ```{r fft_enery_tab}
 fft_all |>
   group_by(source, season, datetime) |>
-  summarise(energy = fft_energy(coefficient)) |>
+  summarise(energy = fft_energy(fft_coefficient(amplitude, phase))) |>
   pivot_wider(names_from = source, values_from = energy) |>
   group_by(season) |>
   summarise(dissipation = mean(hobo / era)) |>
@@ -255,12 +255,12 @@ sub <- filter(
 )
 tibble(time = seq(0, 24 * 5, by = 0.1)) |>
   mutate(temperature = fft_reconstruct(
-    c = sub$coefficient,
-    f = sub$frequency[-1],
+    coefficients = fft_coefficient(sub$amplitude, sub$phase),
+    frequencies = sub$frequency[-1],
     time = time
   )) |>
   ggplot(aes(
-    as_datetime(as_date("2023-01-04") - 2 + time / 24),
+    as_datetime(as_date("2023-01-04") - 2 + (time + 1) / 24),
     temperature
   )) +
   geom_line() +
