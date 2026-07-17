@@ -12,7 +12,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/sylvainschmitt/microclimr/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/sylvainschmitt/microclimr/blob/dev/DESCRIPTION)
 
 Schmitt S, Hingant E, Lenoir J (2026). *microclimr: Microclimate
 analyses and modelling*. R package version 0.1.1,

@@ -5,12 +5,12 @@ Fast Fourier Transform (FFT): variance
 ## Usage
 
 ``` r
-fft_variance(f)
+fft_variance(coefficients)
 ```
 
 ## Arguments
 
-- f:
+- coefficients:
 
   num. The Fourier coefficients.
 
@@ -29,7 +29,7 @@ interpreted as a variance by the formula \$\$V = \frac 1 2
 
 ``` r
 
-fft_rfft(hobo$t_hobo[1:(24 * 5)]) |>
+fft_rfft(temperatures = hobo$t_hobo[1:(24 * 5)]) |>
   fft_variance()
 #> [1] 9286.579
 ```

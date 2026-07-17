@@ -35,7 +35,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>FFT mean</h1>
-      <small class="dont-index">Source: <a href="https://github.com/sylvainschmitt/microclimr/blob/main/R/fft.R" class="external-link"><code>R/fft.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/sylvainschmitt/microclimr/blob/dev/R/fft.R" class="external-link"><code>R/fft.R</code></a></small>
       <div class="d-none name"><code>fft_mean.Rd</code></div>
     </div>
 
@@ -45,15 +45,15 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fft_mean</span><span class="op">(</span><span class="va">c</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fft_mean</span><span class="op">(</span><span class="va">coefficients</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-c">c<a class="anchor" aria-label="anchor" href="#arg-c"></a></dt>
-<dd><p>num. The Fourier coefficients.</p></dd>
+<dl><dt id="arg-coefficients">coefficients<a class="anchor" aria-label="anchor" href="#arg-coefficients"></a></dt>
+<dd><p>num. The Fourier amplitudes.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -62,14 +62,14 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The coefficient \(a_{0}=c_{0}\) plays a particular role, it is the mean
+    <p>The amplitude \(a_{0}\) plays a particular role, it is the mean
 $$a_{0} = \frac 1 N \sum_{n=1}^{N}S_{n}\,.$$</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="fft_rfft.html">fft_rfft</a></span><span class="op">(</span><span class="va">hobo</span><span class="op">$</span><span class="va">t_hobo</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="fl">24</span> <span class="op">*</span> <span class="fl">5</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="fft_rfft.html">fft_rfft</a></span><span class="op">(</span>temperatures <span class="op">=</span> <span class="va">hobo</span><span class="op">$</span><span class="va">t_hobo</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="fl">24</span> <span class="op">*</span> <span class="fl">5</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">fft_mean</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 17.61993</span>
 <span class="r-in"><span></span></span>

@@ -35,7 +35,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>FFT delay</h1>
-      <small class="dont-index">Source: <a href="https://github.com/sylvainschmitt/microclimr/blob/main/R/fft.R" class="external-link"><code>R/fft.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/sylvainschmitt/microclimr/blob/dev/R/fft.R" class="external-link"><code>R/fft.R</code></a></small>
       <div class="d-none name"><code>fft_delay.Rd</code></div>
     </div>
 
@@ -45,18 +45,18 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fft_delay</span><span class="op">(</span><span class="va">f</span>, <span class="va">freq</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fft_delay</span><span class="op">(</span><span class="va">coefficients</span>, <span class="va">frequencies</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-f">f<a class="anchor" aria-label="anchor" href="#arg-f"></a></dt>
+<dl><dt id="arg-coefficients">coefficients<a class="anchor" aria-label="anchor" href="#arg-coefficients"></a></dt>
 <dd><p>num. The Fourier coefficients.</p></dd>
 
 
-<dt id="arg-freq">freq<a class="anchor" aria-label="anchor" href="#arg-freq"></a></dt>
+<dt id="arg-frequencies">frequencies<a class="anchor" aria-label="anchor" href="#arg-frequencies"></a></dt>
 <dd><p>num. The harmonics frequencies.</p></dd>
 
 </dl></div>
@@ -68,8 +68,8 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="fft_rfft.html">fft_rfft</a></span><span class="op">(</span><span class="va">hobo</span><span class="op">$</span><span class="va">t_hobo</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="fl">24</span> <span class="op">*</span> <span class="fl">5</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
-<span class="r-in"><span>  <span class="fu">fft_delay</span><span class="op">(</span><span class="fu"><a href="fft_freq.html">fft_freq</a></span><span class="op">(</span><span class="fl">24</span> <span class="op">*</span> <span class="fl">5</span>, <span class="fl">24</span> <span class="op">*</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="fft_rfft.html">fft_rfft</a></span><span class="op">(</span>temperatures <span class="op">=</span> <span class="va">hobo</span><span class="op">$</span><span class="va">t_hobo</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="fl">24</span> <span class="op">*</span> <span class="fl">5</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span>  <span class="fu">fft_delay</span><span class="op">(</span><span class="fu"><a href="fft_freq.html">fft_freq</a></span><span class="op">(</span>samples <span class="op">=</span> <span class="fl">24</span> <span class="op">*</span> <span class="fl">5</span>, time_window <span class="op">=</span> <span class="fl">24</span> <span class="op">*</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 24.14719469 14.47134302 -3.55283281 11.00398648 -3.43110014  7.08970405</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7]  6.22069673  1.88578262  6.05778819 -2.44366092  0.35706425  2.74381325</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13] -0.94597117  1.87459252 -2.51774660  0.75082050  0.26027646 -2.73256172</span>

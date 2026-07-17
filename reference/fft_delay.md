@@ -5,16 +5,16 @@ Fast Fourier Transform (FFT): delay per frequencies
 ## Usage
 
 ``` r
-fft_delay(f, freq)
+fft_delay(coefficients, frequencies)
 ```
 
 ## Arguments
 
-- f:
+- coefficients:
 
   num. The Fourier coefficients.
 
-- freq:
+- frequencies:
 
   num. The harmonics frequencies.
 
@@ -27,8 +27,8 @@ fft_delay(f, freq)
 
 ``` r
 
-fft_rfft(hobo$t_hobo[1:(24 * 5)]) |>
-  fft_delay(fft_freq(24 * 5, 24 * 5))
+fft_rfft(temperatures = hobo$t_hobo[1:(24 * 5)]) |>
+  fft_delay(fft_freq(samples = 24 * 5, time_window = 24 * 5))
 #>  [1] 24.14719469 14.47134302 -3.55283281 11.00398648 -3.43110014  7.08970405
 #>  [7]  6.22069673  1.88578262  6.05778819 -2.44366092  0.35706425  2.74381325
 #> [13] -0.94597117  1.87459252 -2.51774660  0.75082050  0.26027646 -2.73256172

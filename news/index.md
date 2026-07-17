@@ -1,5 +1,9 @@
 # Changelog
 
+## microclimr 0.0.1.9011
+
+- renaming arguments, examples, fft_amplitude, fft_phase, …
+
 ## microclimr 0.0.1.9010
 
 - Erwan maths vignette and maths description in fft.R

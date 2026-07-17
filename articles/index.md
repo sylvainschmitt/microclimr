@@ -2,12 +2,12 @@
 
 ### Principle
 
-- [Maths](https://sylvainschmitt.github.io/microclimr/articles/Maths.md):
+- [maths](https://sylvainschmitt.github.io/microclimr/articles/maths.md):
 
 ### Examples
 
-- [Example](https://sylvainschmitt.github.io/microclimr/articles/Example.md):
+- [example](https://sylvainschmitt.github.io/microclimr/articles/example.md):
 
 ### Others
 
-- [Macroclimate](https://sylvainschmitt.github.io/microclimr/articles/Macroclimate.md):
+- [macroclimate](https://sylvainschmitt.github.io/microclimr/articles/macroclimate.md):

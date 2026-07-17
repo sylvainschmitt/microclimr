@@ -1,17 +1,17 @@
 # FFT periods
 
-Fast Fourier Transform (FFT): periods for a real signal of length t (in
+Fast Fourier Transform (FFT): periods for a real signal of length T (in
 time) with n samples.
 
 ## Usage
 
 ``` r
-fft_period(f)
+fft_period(frequencies)
 ```
 
 ## Arguments
 
-- f:
+- frequencies:
 
   num. The harmonics frequencies.
 
@@ -23,7 +23,7 @@ fft_period(f)
 
 ``` r
 
-fft_freq(201, 10) |>
+fft_freq(samples = 201, time_window = 10) |>
   fft_period()
 #>   [1] 10.0000000  5.0000000  3.3333333  2.5000000  2.0000000  1.6666667
 #>   [7]  1.4285714  1.2500000  1.1111111  1.0000000  0.9090909  0.8333333

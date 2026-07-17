@@ -1,20 +1,23 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://sylvainschmitt.github.io/microclimr/404.html</loc></url>
 <url><loc>https://sylvainschmitt.github.io/microclimr/LICENSE.html</loc></url>
-<url><loc>https://sylvainschmitt.github.io/microclimr/articles/Example.html</loc></url>
-<url><loc>https://sylvainschmitt.github.io/microclimr/articles/Macroclimate.html</loc></url>
-<url><loc>https://sylvainschmitt.github.io/microclimr/articles/Maths.html</loc></url>
+<url><loc>https://sylvainschmitt.github.io/microclimr/articles/example.html</loc></url>
 <url><loc>https://sylvainschmitt.github.io/microclimr/articles/index.html</loc></url>
+<url><loc>https://sylvainschmitt.github.io/microclimr/articles/macroclimate.html</loc></url>
+<url><loc>https://sylvainschmitt.github.io/microclimr/articles/maths.html</loc></url>
 <url><loc>https://sylvainschmitt.github.io/microclimr/authors.html</loc></url>
 <url><loc>https://sylvainschmitt.github.io/microclimr/index.html</loc></url>
 <url><loc>https://sylvainschmitt.github.io/microclimr/news/index.html</loc></url>
 <url><loc>https://sylvainschmitt.github.io/microclimr/reference/era.html</loc></url>
+<url><loc>https://sylvainschmitt.github.io/microclimr/reference/fft_amplitude.html</loc></url>
+<url><loc>https://sylvainschmitt.github.io/microclimr/reference/fft_coefficient.html</loc></url>
 <url><loc>https://sylvainschmitt.github.io/microclimr/reference/fft_delay.html</loc></url>
 <url><loc>https://sylvainschmitt.github.io/microclimr/reference/fft_energy.html</loc></url>
 <url><loc>https://sylvainschmitt.github.io/microclimr/reference/fft_freq.html</loc></url>
 <url><loc>https://sylvainschmitt.github.io/microclimr/reference/fft_mean.html</loc></url>
 <url><loc>https://sylvainschmitt.github.io/microclimr/reference/fft_period.html</loc></url>
-<url><loc>https://sylvainschmitt.github.io/microclimr/reference/fft_powers.html</loc></url>
+<url><loc>https://sylvainschmitt.github.io/microclimr/reference/fft_phase.html</loc></url>
+<url><loc>https://sylvainschmitt.github.io/microclimr/reference/fft_power.html</loc></url>
 <url><loc>https://sylvainschmitt.github.io/microclimr/reference/fft_ratio.html</loc></url>
 <url><loc>https://sylvainschmitt.github.io/microclimr/reference/fft_reconstruct.html</loc></url>
 <url><loc>https://sylvainschmitt.github.io/microclimr/reference/fft_rfft.html</loc></url>

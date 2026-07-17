@@ -1,50 +1,36 @@
-# Fourier coefficients
+# FFT Rebuild coefficient
 
-Fast Fourier Transform (FFT) of a series of temperatures.
+Fast Fourier Transform (FFT): get coefficients from amplitude and phase
 
 ## Usage
 
 ``` r
-fft_rfft(temperatures)
+fft_coefficient(amplitudes, phases)
 ```
 
 ## Arguments
 
-- temperatures:
+- amplitudes:
 
-  num. Series of temperatures at constant interval.
+  num. The Fourier amplitudes
+
+- phases:
+
+  num. The Fourier phases
 
 ## Value
 
 \\c\\ the Fourier coefficients of \\S\\ of length \\\ell\\, whose
 coefficients are \\c\_{0},c\_{1},\ldots,c\_{\ell-1}\\
 
-## Details
-
-A series \\S=S_1,\ldots,S_N\\ consisting of \\N\\ samples measured at a
-time interval \\\Delta t\\ can be analyzed by a Fourier series
-
-\$\$s(t) = a\_{0} + \sum\_{n=1}^{\ell} a\_{n} \cos(2\pi \tfrac{n}{T}
-t) + b\_{n}\sin(2\pi \tfrac n T t)\$\$
-
-where \\a_n\\ and \\b_n\\ are the Fourier coefficients obtained from the
-fast fourier transform (FFT) of \\S\\. Note, the time reference of the
-first measure is \\t=0\\.
-
-The number of coeffcients is \$\$ \ell = \begin{cases} N/2 + 1 &
-\text{if } N \text{ is even} \\ (N+1)/2 & \text{if } N \text{ is odd}
-\end{cases} \$\$
-
-Generally they take the form of complex number \$\$c\_{n} = a\_{n} - i
-b\_{n} \\, \quad n=0,\ldots, \ell-1\$\$ with \\b\_{0}=0\\. Hence, we
-have the relation \$\$a\_{n} = \Re (c\_{n}) \text{ and } b\_{n} = -
-\Im(c\_{n})\\, \quad n=0,\ldots,\ell \\.\$\$
-
 ## Examples
 
 ``` r
 
-fft_rfft(temperatures = hobo$t_hobo[1:(24 * 5)])
+c <- fft_rfft(temperatures = hobo$t_hobo[1:(24 * 5)])
+a <- fft_amplitude(c)
+p <- fft_phase(c)
+fft_coefficient(amplitudes = a, phases = p)
 #>  [1] 17.619925000+0.000000000i  0.352106589+1.112782143i
 #>  [3]  0.016938427+0.305651468i  0.786822892-0.491193725i
 #>  [5] -0.366091153+0.405903371i  0.561862627-0.705511083i

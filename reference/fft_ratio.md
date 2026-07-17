@@ -11,8 +11,8 @@ the micro and macroclimate per window in a single table.
 ``` r
 fft_ratio(
   data,
-  t,
-  index_col,
+  time_window,
+  time_col,
   microclimate_col,
   macroclimate_col,
   window = "5 days",
@@ -29,12 +29,12 @@ fft_ratio(
   df. The data frame with a column containing the time index and a
   column containing the temperature.
 
-- t:
+- time_window:
 
-  int. Time window, \\t=N\Delta t\\ where \\\Delta t\\ is the sampling
+  int. Time window, \\T=N\Delta t\\ where \\\Delta t\\ is the sampling
   interval.
 
-- index_col:
+- time_col:
 
   char. The name of the column containing the time index.
 
@@ -78,9 +78,11 @@ A table with:
 
 - \\p\\ the harmonics periods
 
-- \\f\\ the Fourier coefficients of \\s\\ of length \\\ell\\, whose
-  coefficients are \\c\_{0},c\_{1},\ldots,c\_{\ell-1}\\ for micro and
-  macroclimate.
+- \\a\_{n}\\ the amplitudes of the Fourier coefficients of \\s\\ of
+  length \\\ell\\, whose values are \\a\_{0},a\_{1},\ldots,c\_{\ell-1}\\
+
+- \\b\_{n}\\ the phases of the Fourier coefficients of \\s\\ of length
+  \\\ell\\, whose values are \\a\_{0},a\_{1},\ldots,c\_{\ell-1}\\
 
 - \\P\\ array of powers, \\P\[n\] = \|c\_{n}\|\\ for
   \\n=1,\ldots,\ell-1\\ for micro and macroclimate.
@@ -89,7 +91,8 @@ A table with:
 
 ## Details
 
-Can be used with a grouped table, see vignette *to be linked*.
+Can be used with a grouped table, see
+[vignette](https://sylvainschmitt.github.io/microclimr/reference/Examples.md).
 
 ## Examples
 
@@ -98,35 +101,21 @@ Can be used with a grouped table, see vignette *to be linked*.
 data <- era |>
   dplyr::rename(era = tas, datetime = time) |>
   dplyr::select(datetime, era) |>
-  dplyr::left_join(dplyr::select(hobo, datetime, t_hobo) |>
-    dplyr::rename(hobo = t_hobo))
-#> Joining with `by = join_by(datetime)`
-fft_ratio(data, 24 * 5, "datetime", "hobo", "era") |>
+  dplyr::left_join(
+    dplyr::select(hobo, datetime, t_hobo) |>
+      dplyr::rename(hobo = t_hobo),
+    by = dplyr::join_by(datetime)
+  )
+fft_ratio(
+  data = data, time_window = 24 * 5, time_col = "datetime",
+  microclimate_col = "hobo", macroclimate_col = "era"
+) |>
   dplyr::filter(period == 24) |>
-  summary()
-#> Joining with `by = join_by(frequency, period, datetime)`
-#>    frequency           period    coefficient_macro    power_macro    
-#>  Min.   :0.04167   Min.   :24   Min.Mod   : 0.4197   Min.   :0.4197  
-#>  1st Qu.:0.04167   1st Qu.:24   Median.Mod: 2.8018   1st Qu.:1.5442  
-#>  Median :0.04167   Median :24   Max.Mod   : 5.4461   Median :2.8018  
-#>  Mean   :0.04167   Mean   :24   Min.Arg   :-3.1173   Mean   :2.7343  
-#>  3rd Qu.:0.04167   3rd Qu.:24   Median.Arg: 2.7174   3rd Qu.:3.7916  
-#>  Max.   :0.04167   Max.   :24   Max.Arg   : 3.0893   Max.   :5.4461  
-#>                                                                      
-#>     datetime                    coefficient_micro    power_micro    
-#>  Min.   :2023-01-04 12:30:00   Min.Mod   : 0.5165   Min.   :0.5165  
-#>  1st Qu.:2023-04-06 00:30:00   Median.Mod: 2.4286   1st Qu.:1.5917  
-#>  Median :2023-07-03 12:30:00   Max.Mod   : 4.9065   Median :2.4286  
-#>  Mean   :2023-07-02 20:09:49   Min.Arg   :-3.1240   Mean   :2.4598  
-#>  3rd Qu.:2023-09-30 00:30:00   Median.Arg: 2.6925   3rd Qu.:3.3235  
-#>  Max.   :2023-12-27 12:30:00   Max.Arg   : 3.0747   Max.   :4.9065  
-#>                                NAs       :25        NAs    :25      
-#>      ratio       
-#>  Min.   :0.4093  
-#>  1st Qu.:0.6407  
-#>  Median :0.7461  
-#>  Mean   :0.7823  
-#>  3rd Qu.:0.9519  
-#>  Max.   :1.2607  
-#>  NAs    :25      
+  dplyr::summarise_all(mean, na.rm = TRUE)
+#> # A tibble: 1 × 10
+#>   datetime            frequency period amplitude_macro phase_macro power_macro
+#>   <dttm>                  <dbl>  <dbl>           <dbl>       <dbl>       <dbl>
+#> 1 2023-07-02 20:09:49    0.0417     24           -2.47        1.08        2.73
+#> # ℹ 4 more variables: amplitude_micro <dbl>, phase_micro <dbl>,
+#> #   power_micro <dbl>, ratio <dbl>
 ```

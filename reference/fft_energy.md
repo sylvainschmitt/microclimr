@@ -5,12 +5,12 @@ Fast Fourier Transform (FFT): energy
 ## Usage
 
 ``` r
-fft_energy(f)
+fft_energy(coefficients)
 ```
 
 ## Arguments
 
-- f:
+- coefficients:
 
   num. The Fourier coefficients.
 
@@ -29,7 +29,7 @@ On the other hand, the so-called Parseval formula gives the *energy*:
 
 ``` r
 
-fft_rfft(hobo$t_hobo[1:(24 * 5)]) |>
+fft_rfft(temperatures = hobo$t_hobo[1:(24 * 5)]) |>
   fft_energy()
 #> [1] 317.6476
 ```
